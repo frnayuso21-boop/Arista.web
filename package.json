@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "./deploy.sh",
+    "deploy:staging": "./deploy.sh staging",
+    "build:analyze": "vite build --mode analyze",
+    "serve": "vite preview --host"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Wifi, Smartphone, Tv, Phone, CheckCircle, Router } from 'lucide-react';
 import AristaLogo from './AristaLogo';
 
@@ -11,18 +11,30 @@ interface ConfigOption {
   name: string;
   price: number;
   description: string;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon: React.ComponentType<any>;
 }
 
 const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
   const [clientType, setClientType] = useState<string>('');
   const [selectedFibra, setSelectedFibra] = useState<string>('');
   const [selectedMovil, setSelectedMovil] = useState<string>('');
-  const [selectedTV, setSelectedTV] = useState<string>('');
+  const [selectedTV, setSelectedTV] = useState<string>('');  
+  const [selectedEsim, setSelectedEsim] = useState<string>('esim-none');
   const [includeFijo] = useState<boolean>(false);
   const [additionalLines, setAdditionalLines] = useState<{type: string, count: number}[]>([]);
+  const [additionalSimLines, setAdditionalSimLines] = useState<{type: string, count: number}[]>([]);
+  const [esimCount, setEsimCount] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  
+  // Detectar si viene desde empresas
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tipo = urlParams.get('tipo');
+    if (tipo === 'empresa') {
+      setClientType('empresa');
+    }
+  }, []);
   
   // Datos personales
   const [formData, setFormData] = useState({
@@ -38,18 +50,52 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
   const [acceptCookies, setAcceptCookies] = useState<boolean>(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState<boolean>(false);
 
-  const fibraOptions: ConfigOption[] = [
+  // Opciones de fibra según el tipo de cliente
+  const fibraOptionsParticular: ConfigOption[] = [
     { id: 'fibra-300', name: '300 Mbps', price: 29.90, description: 'Perfecto para uso básico', icon: Wifi },
     { id: 'fibra-600', name: '600 Mbps', price: 32.89, description: 'Para usuarios exigentes', icon: Wifi },
     { id: 'fibra-1gb', name: '1 Gbps', price: 37.90, description: 'Máxima velocidad', icon: Wifi }
   ];
+  
+  const fibraOptionsEmpresa: ConfigOption[] = [
+    { id: 'fibra-300-empresa', name: 'Starter Business - 300 Mbps', price: 26.80, description: 'Fibra óptica simétrica con IP fija', icon: Wifi },
+    { id: 'fibra-600-empresa', name: 'Professional - 600 Mbps', price: 37.66, description: 'Fibra óptica simétrica con Router WiFi 6', icon: Wifi },
+    { id: 'fibra-1gb-empresa', name: 'Enterprise - 1000 Mbps', price: 45.75, description: 'Fibra óptica simétrica con Backup 4G', icon: Wifi }
+  ];
+  
+  const fibraOptions = clientType === 'empresa' ? fibraOptionsEmpresa : fibraOptionsParticular;
 
-  const movilOptions: ConfigOption[] = [
+  // Opciones móviles para particulares
+  const movilOptionsParticular: ConfigOption[] = [
     { id: 'movil-none', name: 'Sin móvil', price: 0, description: 'Solo fibra', icon: Smartphone },
     { id: 'movil-40gb', name: '40 GB', price: 2.90, description: 'Voz ilimitada', icon: Smartphone },
     { id: 'movil-80gb', name: '80 GB', price: 4.90, description: 'Voz ilimitada', icon: Smartphone },
     { id: 'movil-120gb', name: '120 GB (compartidos)', price: 10.90, description: 'Con 600Mb y 1Gb', icon: Smartphone },
     { id: 'movil-200gb', name: '200 GB (compartidos)', price: 15.90, description: 'Con 600Mb y 1Gb', icon: Smartphone }
+  ];
+
+  // Opciones móviles para empresas
+  const movilOptionsEmpresa: ConfigOption[] = [
+    { id: 'movil-none', name: 'Sin móvil', price: 0, description: 'Solo fibra', icon: Smartphone },
+    { id: 'movil-empresa-solo-voz', name: 'Solo Voz', price: 5.95, description: 'Llamadas ilimitadas', icon: Smartphone },
+    { id: 'movil-empresa-15gb', name: 'Voz + 15GB', price: 7.95, description: 'Llamadas ilimitadas + 15GB', icon: Smartphone },
+    { id: 'movil-empresa-40gb', name: 'Voz + 40GB', price: 9.95, description: 'Llamadas ilimitadas + 40GB', icon: Smartphone },
+    { id: 'movil-empresa-80gb', name: 'Voz + 80GB', price: 11.75, description: 'Llamadas ilimitadas + 80GB', icon: Smartphone },
+    { id: 'movil-empresa-160gb', name: 'Voz + 160GB', price: 15.75, description: 'Llamadas ilimitadas + 160GB', icon: Smartphone },
+    { id: 'movil-empresa-ilimitado', name: 'Voz y Datos Ilimitados', price: 23.75, description: 'Sin límites', icon: Smartphone }
+  ];
+
+  const movilOptions = clientType === 'empresa' ? movilOptionsEmpresa : movilOptionsParticular;
+
+  // Opciones eSIM solo para empresas
+  const esimOptions: ConfigOption[] = [
+    { id: 'esim-none', name: 'Sin líneas eSIM', price: 0, description: 'No añadir eSIM', icon: Smartphone },
+    { id: 'esim-solo-voz', name: 'eSIM Solo Voz', price: 5.95, description: 'Llamadas ilimitadas + 15€ alta', icon: Smartphone },
+    { id: 'esim-15gb', name: 'eSIM Voz + 15GB', price: 7.95, description: 'Llamadas ilimitadas + 15GB + 15€ alta', icon: Smartphone },
+    { id: 'esim-40gb', name: 'eSIM Voz + 40GB', price: 9.95, description: 'Llamadas ilimitadas + 40GB + 15€ alta', icon: Smartphone },
+    { id: 'esim-80gb', name: 'eSIM Voz + 80GB', price: 11.75, description: 'Llamadas ilimitadas + 80GB + 15€ alta', icon: Smartphone },
+    { id: 'esim-160gb', name: 'eSIM Voz + 160GB', price: 15.75, description: 'Llamadas ilimitadas + 160GB + 15€ alta', icon: Smartphone },
+    { id: 'esim-ilimitado', name: 'eSIM Voz y Datos Ilimitados', price: 23.75, description: 'Sin límites + 15€ alta', icon: Smartphone }
   ];
 
   const tvOptions: ConfigOption[] = [
@@ -66,37 +112,53 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
     const fibra = fibraOptions.find(f => f.id === selectedFibra);
     const movil = movilOptions.find(m => m.id === selectedMovil);
     const tv = tvOptions.find(t => t.id === selectedTV);
+    const esim = esimOptions.find(e => e.id === selectedEsim);
     
-    if (fibra && movil && movil.id !== 'movil-none') {
-      // Precios exactos de los paquetes Fibra + Móvil
-      if (fibra.id === 'fibra-300') {
-        if (movil.id === 'movil-40gb') total = 29.90; // Precio corregido para 300MB
-      } else if (fibra.id === 'fibra-600') {
-        if (movil.id === 'movil-40gb') total = 32.89;
-        else if (movil.id === 'movil-80gb') total = 34.89;
-        else if (movil.id === 'movil-120gb') total = 40.89;
-        else if (movil.id === 'movil-200gb') total = 45.89;
-      } else if (fibra.id === 'fibra-1gb') {
-        if (movil.id === 'movil-40gb') total = 37.90;
-        else if (movil.id === 'movil-80gb') total = 39.90;
-        else if (movil.id === 'movil-120gb') total = 45.90;
-        else if (movil.id === 'movil-200gb') total = 50.89;
+    if (clientType === 'empresa') {
+      // Cálculo para empresas: fibra + móvil + eSIM por separado
+      if (fibra) total += fibra.price;
+      if (movil && movil.id !== 'movil-none') total += movil.price;
+      if (esim && esim.id !== 'esim-none') {
+        total += esim.price;
       }
-    } else if (fibra) {
-      total = fibra.price;
+    } else {
+      // Cálculo para particulares (paquetes combinados)
+      if (fibra && movil && movil.id !== 'movil-none') {
+        // Precios exactos de los paquetes Fibra + Móvil
+        if (fibra.id === 'fibra-300') {
+          if (movil.id === 'movil-40gb') total = 29.90;
+        } else if (fibra.id === 'fibra-600') {
+          if (movil.id === 'movil-40gb') total = 32.89;
+          else if (movil.id === 'movil-80gb') total = 34.89;
+          else if (movil.id === 'movil-120gb') total = 40.89;
+          else if (movil.id === 'movil-200gb') total = 45.89;
+        } else if (fibra.id === 'fibra-1gb') {
+          if (movil.id === 'movil-40gb') total = 37.90;
+          else if (movil.id === 'movil-80gb') total = 39.90;
+          else if (movil.id === 'movil-120gb') total = 45.90;
+          else if (movil.id === 'movil-200gb') total = 50.89;
+        }
+      } else if (fibra) {
+        total = fibra.price;
+      }
     }
     
     // Agregar precio de TV si está seleccionada
     if (tv) total += tv.price;
     
-    // Agregar costo de líneas móviles adicionales
+    // Agregar costo de líneas móviles adicionales (SIM física)
     additionalLines.forEach(line => {
       if (line.type === '40gb') {
-        total += line.count * 5.70;
+        total += line.count * 5.90;
       } else if (line.type === '80gb') {
         total += line.count * 7.90;
       }
     });
+    
+    // Agregar costo de líneas eSIM adicionales para empresas
+    if (clientType === 'empresa' && esim && esim.id !== 'esim-none' && esimCount > 1) {
+      total += (esimCount - 1) * esim.price; // Primera línea ya incluida arriba
+    }
     
     // El teléfono fijo viene incluido en los paquetes Fibra + Móvil
     if (includeFijo && (!selectedMovil || selectedMovil === 'movil-none')) {
@@ -105,20 +167,46 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
     
     return Math.max(total, 0);
   };
+  
+  const calculateEsimSetupCost = () => {
+    if (clientType === 'empresa' && selectedEsim !== 'esim-none') {
+      return esimCount * 15; // 15€ por cada línea eSIM
+    }
+    return 0;
+  };
 
   const getSelectedServices = () => {
     const services = [];
     const fibra = fibraOptions.find(f => f.id === selectedFibra);
     const movil = movilOptions.find(m => m.id === selectedMovil);
+    const esim = esimOptions.find(e => e.id === selectedEsim);
     
     if (fibra) services.push(`Fibra ${fibra.name}`);
     if (movil && movil.id !== 'movil-none') services.push(`Móvil ${movil.name}`);
     
-    // Agregar líneas móviles adicionales al resumen
+    // Agregar líneas eSIM para empresas
+    if (clientType === 'empresa' && esim && esim.id !== 'esim-none' && esimCount > 0) {
+      services.push(`${esimCount}x ${esim.name}`);
+      if (calculateEsimSetupCost() > 0) {
+        services.push(`Activación eSIM: ${calculateEsimSetupCost()}€ (pago único)`);
+      }
+    }
+    
+    // Agregar líneas móviles adicionales al resumen (para particulares)
     additionalLines.forEach(line => {
       if (line.count > 0) {
         const lineType = line.type === '40gb' ? '40GB' : '80GB';
         services.push(`${line.count}x Línea ${lineType} adicional`);
+      }
+    });
+    
+    // Agregar líneas SIM físicas adicionales para empresas
+    additionalSimLines.forEach(line => {
+      if (line.count > 0) {
+        const option = movilOptionsEmpresa.find(opt => opt.id === line.type);
+        if (option) {
+          services.push(`${line.count}x ${option.name} adicional`);
+        }
       }
     });
     
@@ -355,7 +443,7 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
                       <div className="flex items-center justify-between p-3 rounded-lg border border-white/20 bg-white/5">
                         <div>
                           <span className="text-white font-medium">40GB adicionales</span>
-                          <p className="text-white/70 text-sm">5,70€/mes por línea</p>
+                          <p className="text-white/70 text-sm">5,90€/mes por línea</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -433,6 +521,68 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
                           </button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Líneas eSIM - Solo para empresas */}
+                {clientType === 'empresa' && (
+                  <div className="mt-6">
+                    <h4 className="text-lg font-semibold text-white mb-3">Líneas eSIM</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {esimOptions.map((option) => {
+                        if (option.id === 'esim-none') {
+                          return (
+                            <div
+                              key={option.id}
+                              onClick={() => setSelectedEsim(option.id)}
+                              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                                selectedEsim === option.id
+                                  ? 'border-purple-500 bg-purple-500/20'
+                                  : 'border-white/20 bg-white/5 hover:border-white/40'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <option.icon className="w-5 h-5 text-purple-400" />
+                                  <div>
+                                    <h3 className="text-white font-medium">{option.name}</h3>
+                                    <p className="text-white/70 text-sm">{option.description}</p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-white font-semibold">{option.price}€/mes</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div
+                              key={option.id}
+                              onClick={() => setSelectedEsim(option.id)}
+                              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                                selectedEsim === option.id
+                                  ? 'border-purple-500 bg-purple-500/20'
+                                  : 'border-white/20 bg-white/5 hover:border-white/40'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <option.icon className="w-5 h-5 text-purple-400" />
+                                  <div>
+                                    <h3 className="text-white font-medium">{option.name}</h3>
+                                    <p className="text-white/70 text-sm">{option.description}</p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-white font-semibold">{option.price}€/mes</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                      })}
                     </div>
                   </div>
                 )}
@@ -640,8 +790,8 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
                             Enviando...
                           </>
                         ) : (
-                           selectedFibra && formData.name.trim() && formData.email.trim() && formData.phone.trim() && formData.address.trim() && formData.city.trim() && formData.postalCode.trim() && acceptCookies && acceptPrivacy ? 'Enviar Solicitud' : 'Completa todos los campos'
-                          )}
+                          selectedFibra && formData.name.trim() && formData.email.trim() && formData.phone.trim() && formData.address.trim() && formData.city.trim() && formData.postalCode.trim() && acceptCookies && acceptPrivacy ? 'Enviar Solicitud' : 'Completa todos los campos'
+                        )}
                       </button>
                     </>
                   )}

@@ -1,3 +1,6 @@
+/* Importar animaciones ultra-optimizadas */
+@import './styles/animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,0 +1,227 @@
+# Robots.txt Ultra-Optimizado para SEO Máximo
+# Configuración avanzada para crawlers y bots
+
+# === CONFIGURACIÓN PRINCIPAL ===
+User-agent: *
+Allow: /
+
+# Sitemap principal (CRÍTICO para indexación)
+Sitemap: https://tudominio.com/sitemap.xml
+Sitemap: https://tudominio.com/sitemap-images.xml
+Sitemap: https://tudominio.com/sitemap-news.xml
+
+# === OPTIMIZACIONES ESPECÍFICAS POR BOT ===
+
+# Googlebot - Configuración premium
+User-agent: Googlebot
+Allow: /
+Allow: /api/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.webp$
+Allow: /*.avif$
+Crawl-delay: 1
+
+# Googlebot para imágenes
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /assets/
+Allow: /*.webp$
+Allow: /*.avif$
+Allow: /*.jpg$
+Allow: /*.png$
+
+# Bingbot - Microsoft
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Baiduspider - China
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 3
+
+# Yandex - Rusia
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# === BOTS DE REDES SOCIALES ===
+
+# Facebook
+User-agent: facebookexternalhit
+Allow: /
+Allow: /og-images/
+
+# Twitter
+User-agent: Twitterbot
+Allow: /
+Allow: /twitter-cards/
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+
+# WhatsApp
+User-agent: WhatsApp
+Allow: /
+
+# Telegram
+User-agent: TelegramBot
+Allow: /
+
+# === BOTS DE ANÁLISIS Y SEO ===
+
+# Ahrefs
+User-agent: AhrefsBot
+Allow: /
+Crawl-delay: 5
+
+# SEMrush
+User-agent: SemrushBot
+Allow: /
+Crawl-delay: 5
+
+# Moz
+User-agent: MozBot
+Allow: /
+Crawl-delay: 5
+
+# Screaming Frog
+User-agent: Screaming Frog SEO Spider
+Allow: /
+
+# === RESTRICCIONES Y BLOQUEOS ===
+
+# Bloquear directorios administrativos
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-content/plugins/
+Disallow: /wp-content/themes/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /temp/
+
+# Bloquear archivos sensibles
+Disallow: /*.log$
+Disallow: /*.sql$
+Disallow: /*.gz$
+Disallow: /*.tar$
+Disallow: /*.zip$
+Disallow: /backup/
+Disallow: /backups/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /.svn/
+Disallow: /node_modules/
+
+# Bloquear parámetros de URL problemáticos
+Disallow: /*?utm_*
+Disallow: /*?ref=*
+Disallow: /*?source=*
+Disallow: /*?campaign=*
+Disallow: /*?gclid=*
+Disallow: /*?fbclid=*
+Disallow: /*?print=*
+Disallow: /*?pdf=*
+
+# Bloquear páginas de prueba y desarrollo
+Disallow: /test/
+Disallow: /testing/
+Disallow: /dev/
+Disallow: /development/
+Disallow: /staging/
+Disallow: /beta/
+Disallow: /alpha/
+
+# Bloquear duplicados de contenido
+Disallow: /tag/
+Disallow: /tags/
+Disallow: /author/
+Disallow: /date/
+Disallow: /archive/
+Disallow: /search/
+Disallow: /*?s=*
+Disallow: /*?search=*
+
+# === BOTS MALICIOSOS Y SPAM ===
+
+# Bloquear bots agresivos
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MajesticSEO
+Crawl-delay: 10
+
+# Bloquear scrapers conocidos
+User-agent: HTTrack
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: WebReaper
+Disallow: /
+
+User-agent: WebCopier
+Disallow: /
+
+User-agent: WebZIP
+Disallow: /
+
+# === CONFIGURACIONES AVANZADAS ===
+
+# Permitir acceso completo a recursos críticos
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /assets/
+Allow: /fonts/
+Allow: /icons/
+Allow: /favicon.ico
+Allow: /apple-touch-icon.png
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /service-worker.js
+
+# Permitir archivos de verificación
+Allow: /google*.html
+Allow: /bing*.html
+Allow: /yandex*.html
+Allow: /baidu*.html
+Allow: /.well-known/
+
+# === INFORMACIÓN ADICIONAL ===
+
+# Host principal (ayuda con canonicalización)
+Host: https://tudominio.com
+
+# Tiempo de crawl optimizado para mejor indexación
+# Crawl-delay configurado individualmente por bot arriba
+
+# === NOTAS IMPORTANTES ===
+# 1. Este robots.txt está optimizado para máximo SEO
+# 2. Permite acceso completo a contenido público
+# 3. Protege archivos sensibles y administrativos
+# 4. Optimiza crawl budget con delays apropiados
+# 5. Incluye configuraciones específicas por motor de búsqueda
+# 6. Bloquea bots maliciosos y scrapers
+# 7. Permite todos los recursos necesarios para renderizado
+
+# Última actualización: 2024-01-15
+# Versión: 2.0 Ultra-Optimizada

@@ -79,67 +79,72 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
             {/* Service Navigation - More Centered */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex space-x-3">
+            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
               <button
                 onClick={() => scrollToParticularesWithTab('fibra')}
-                className="px-2 py-2 text-sm transition-colors text-white hover:text-white/80"
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
               >
                 Fibra
               </button>
               
               <button
                 onClick={() => scrollToParticularesWithTab('fibra-movil')}
-                className="px-2 py-2 text-sm transition-colors text-white hover:text-white/80"
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
               >
                 Fibra + Móvil
               </button>
               
               <button
                 onClick={() => scrollToParticularesWithTab('fibra-movil-tv')}
-                className="px-2 py-2 text-sm transition-colors text-white hover:text-white/80"
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
               >
                 Fibra + Móvil + TV
               </button>
               
               <button
-                onClick={() => scrollToParticularesWithTab('movil')}
-                className="px-2 py-2 text-sm transition-colors text-white hover:text-white/80"
-              >
-                Móvil
-              </button>
-              
-            </div>
-             
-            {/* Main Navigation - Right side */}
-            <div className="ml-auto flex space-x-6">
-              <button
-                onClick={() => scrollToSection('particulares')}
-                className={`px-4 py-2 text-sm transition-colors text-white hover:text-white/80 ${
-                  activeSection === 'particulares' 
-                    ? 'border-b border-white' 
-                    : ''
-                }`}
-              >
-                Particulares
-              </button>
-              
-              <button
                 onClick={() => scrollToSection('tv')}
-                className={`px-4 py-2 text-sm transition-colors text-white hover:text-white/80 ${
-                  activeSection === 'tv' 
-                    ? 'border-b border-white' 
-                    : ''
-                }`}
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
               >
                 TV
               </button>
               
               <button
-                onClick={() => navigate('/empresas')}
-                className="px-4 py-2 text-sm transition-colors text-white hover:text-white/80"
+                onClick={() => navigate('/energia')}
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
               >
-                Empresas
+                Energía
               </button>
+              
+              <button
+                onClick={() => navigate('/seguridad')}
+                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
+              >
+                Seguridad
+              </button>
+              
+            </div>
+             
+            {/* Main Navigation - Right side */}
+            <div className="ml-auto flex items-center space-x-6">
+              <div className="flex items-center space-x-6">
+                <button
+                  onClick={() => scrollToSection('particulares')}
+                  className={`px-4 py-2 text-sm transition-colors text-white hover:text-white/80 ${
+                    activeSection === 'particulares' 
+                      ? 'border-b border-white' 
+                      : ''
+                  }`}
+                >
+                  Particulares
+                </button>
+                
+                <button
+                  onClick={() => navigate('/empresas')}
+                  className="px-4 py-2 text-sm transition-colors text-white hover:text-white/80"
+                >
+                  Empresas
+                </button>
+              </div>
             
               <div className="relative" ref={contactDropdownRef}>
                 <button
@@ -236,24 +241,33 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
             </button>
             
             <button
-              onClick={() => scrollToParticularesWithTab('movil')}
+              onClick={() => scrollToSection('tv')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
             >
-              Móvil
+              TV
             </button>
+            
+            <button
+              onClick={() => scrollToSection('energia')}
+              className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
+            >
+              Energía
+            </button>
+            
+            <button
+              onClick={() => scrollToSection('seguridad')}
+              className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
+            >
+              Seguridad
+            </button>
+            
+            <div className="border-t border-white/20 my-2"></div>
             
             <button
               onClick={() => scrollToSection('particulares')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
             >
               Particulares
-            </button>
-            
-            <button
-              onClick={() => scrollToSection('tv')}
-              className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
-            >
-              TV
             </button>
             
             <button

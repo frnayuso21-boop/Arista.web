@@ -1,0 +1,15 @@
+# Netlify redirects file for Single Page Application
+# This ensures all routes are handled by React Router
+
+# Redirect all routes to index.html for SPA
+/*    /index.html   200
+
+# API redirects (if needed in the future)
+/api/*  https://api.aristamovil.com/:splat  200
+
+# Force HTTPS
+http://aristamovil.com/*  https://aristamovil.com/:splat  301!
+http://www.aristamovil.com/*  https://www.aristamovil.com/:splat  301!
+
+# Redirect www to non-www (optional)
+# https://www.aristamovil.com/*  https://aristamovil.com/:splat  301!

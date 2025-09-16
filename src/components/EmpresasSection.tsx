@@ -46,7 +46,7 @@ const EmpresasSection: React.FC = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-light text-white mb-4">
+          <h2 className="text-3xl font-thin text-white mb-4">
             Empresas
           </h2>
         </div>
@@ -62,13 +62,13 @@ const EmpresasSection: React.FC = () => {
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg mb-3">
                   <service.icon className="w-6 h-6 text-gray-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">{service.title}</h3>
-                <p className="text-gray-600 text-sm">{service.description}</p>
+                <h3 className="text-lg font-light text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-gray-600 text-sm font-light">{service.description}</p>
               </div>
               
               <ul className="space-y-1">
                 {service.features.map((feature, idx) => (
-                  <li key={idx} className="text-xs text-gray-600 flex items-center">
+                  <li key={idx} className="text-xs text-gray-600 flex items-center font-light">
                     <div className="w-1 h-1 bg-gray-400 rounded-full mr-2 flex-shrink-0"></div>
                     {feature}
                   </li>
@@ -79,8 +79,25 @@ const EmpresasSection: React.FC = () => {
         </div>
 
         {/* Contact Section */}
-        <div className="text-center">
-          <p className="text-white/70 text-sm">900 123 457</p>
+        <div className="text-center space-y-2">
+          <p className="text-white/70 text-sm font-light">¿Necesitas ayuda?</p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+            <a 
+              href="tel:+34621192578" 
+              className="text-blue-400 hover:text-blue-300 transition-colors text-sm underline font-light"
+            >
+              📞 +34 621 192 578
+            </a>
+            <span className="text-white/50 hidden sm:inline">|</span>
+            <a 
+              href="https://wa.me/34621192578" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-green-400 hover:text-green-300 transition-colors text-sm underline font-light"
+            >
+              💬 WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </section>

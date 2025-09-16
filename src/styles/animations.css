@@ -1,0 +1,159 @@
+/* Animaciones ultra-optimizadas para Core Web Vitals */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.5s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Optimizaciones de rendimiento */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.content-visibility-auto {
+  content-visibility: auto;
+}
+
+/* Skeleton loading específico para imágenes */
+.skeleton-image {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Optimización para reducir layout shift */
+.aspect-ratio-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+}
+
+.aspect-ratio-16-9 {
+  padding-bottom: 56.25%; /* 9/16 * 100% */
+}
+
+.aspect-ratio-4-3 {
+  padding-bottom: 75%; /* 3/4 * 100% */
+}
+
+.aspect-ratio-1-1 {
+  padding-bottom: 100%; /* 1/1 * 100% */
+}
+
+.aspect-ratio-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mejoras para Core Web Vitals */
+.optimize-lcp {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+.optimize-cls {
+  contain: layout;
+}
+
+.optimize-fid {
+  contain: style paint;
+  will-change: transform;
+}
+
+/* Media queries para optimización responsiva */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-fade-in-scale,
+  .animate-pulse-glow {
+    animation: none;
+  }
+  
+  .transition-all {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .skeleton-image {
+    animation-duration: 1s; /* Más rápido en móviles */
+  }
+}
+
+/* Optimizaciones para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .optimize-retina {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Soporte para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .skeleton-image {
+    background: linear-gradient(
+      90deg,
+      #2a2a2a 25%,
+      #3a3a3a 50%,
+      #2a2a2a 75%
+    );
+  }
+  
+  .bg-gray-100 {
+    background-color: #374151;
+  }
+  
+  .bg-gray-200 {
+    background-color: #4b5563;
+  }
+}

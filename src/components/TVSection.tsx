@@ -1,8 +1,15 @@
 import React from 'react';
 import { Tv, Star, CheckCircle, Trophy, Zap } from 'lucide-react';
 
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  features: string[];
+}
+
 interface TVSectionProps {
-  onContractPlan: (plan: { name: string; price: number; type: string }) => void;
+  onContractPlan: (plan: Plan) => void;
 }
 
 const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
@@ -129,25 +136,32 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div className="text-center">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
               <button
                 onClick={() => onContractPlan({
-                  id: 'tv-premium-empresas',
-                  name: 'Paquete TV Premium para Empresas',
-                  price: 89.90,
+                  id: 'tv-deportivo',
+                  name: 'Paquete Deportivo Completo',
+                  price: 350,
                   features: [
-                    'Todos los deportes premium incluidos',
+                    'La Liga',
+                    'UEFA Champions League',
+                    'UEFA Europa League',
+                    'Premier League',
+                    'Fórmula 1',
+                    'Moto GP',
+                    'A1 Padel',
                     'Más de 100 canales HD',
                     'Contenido 4K disponible',
-                    'Sin permanencia',
-                    'Soporte técnico 24/7',
-                    'Instalación profesional incluida'
+                    'Sin permanencia'
                   ]
                 })}
-                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
               >
-                Contratar Ahora
+                Lo quiero
+              </button>
+              <button className="text-white border border-white/30 px-8 py-3 rounded-xl hover:bg-white/10 transition-colors">
+                Ver otros planes
               </button>
             </div>
 

@@ -341,9 +341,9 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => onContract(plan)}
-                className={`px-8 py-4 bg-gradient-to-r ${details.gradient} text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 transform hover:scale-105`}
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
               >
-                Contratar ahora - {plan.price}€/mes
+                Lo quiero
               </button>
               <button
                 onClick={onBack}

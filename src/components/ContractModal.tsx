@@ -138,6 +138,7 @@ const ContractModal: React.FC<ContractModalProps> = ({ isOpen, onClose, plan }) 
     onClose();
   };
 
+  console.log('ContractModal render - isOpen:', isOpen, 'plan:', plan);
   if (!isOpen || !plan) return null;
 
   return (
