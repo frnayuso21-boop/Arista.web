@@ -232,7 +232,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
 
         {/* Mobile Navigation */}
         <div className={`lg:hidden transition-all duration-300 ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <div className="py-3 space-y-2 bg-black/95 backdrop-blur-md rounded-b-lg border-t border-white/10 max-h-80 overflow-y-auto">
+          <div className="py-3 space-y-2 bg-black/95 backdrop-blur-md rounded-b-lg border-t border-white/10 max-h-96 overflow-y-auto">
             <button
               onClick={() => scrollToParticularesWithTab('fibra')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
