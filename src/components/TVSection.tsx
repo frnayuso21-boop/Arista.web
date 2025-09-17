@@ -53,8 +53,8 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Televisión de Primera
           </h2>
-          <p className="text-xl text-white/80 mb-2">
-            SOLO PARA EMPRESAS
+          <p className="text-xl text-red-400 font-bold mb-2">
+            🏢 EXCLUSIVO PARA EMPRESAS
           </p>
           <div className="inline-flex items-center bg-green-500/20 text-green-300 px-4 py-2 rounded-full text-sm font-medium">
             <Zap className="w-4 h-4 mr-2" />
@@ -67,9 +67,9 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
           <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
             {/* Recommended Badge */}
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full text-sm font-bold flex items-center shadow-lg">
+              <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold flex items-center shadow-lg">
                 <Star className="w-4 h-4 mr-2" />
-                PAQUETE PREMIUM
+                SOLO EMPRESAS
               </span>
             </div>
 
@@ -167,9 +167,14 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
 
             {/* Enterprise Notice */}
             <div className="mt-6 text-center">
-              <p className="text-white/60 text-sm">
-                * Paquete exclusivo para empresas. Se requiere verificación empresarial.
-              </p>
+              <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4">
+                <p className="text-red-300 font-semibold text-sm">
+                  🏢 PAQUETE EXCLUSIVO PARA EMPRESAS
+                </p>
+                <p className="text-white/60 text-xs mt-1">
+                  Se requiere verificación empresarial para contratar este servicio
+                </p>
+              </div>
             </div>
           </div>
         </div>

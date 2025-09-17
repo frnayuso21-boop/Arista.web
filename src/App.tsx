@@ -13,6 +13,17 @@ import PlanDetailPage from './components/PlanDetailPage';
 import CookieBanner from './components/CookieBanner';
 import { initializeTracking, trackPageView } from './utils/analytics';
 
+// Páginas individuales de servicios
+import Fibra300MbpsMovilPage from './pages/Fibra300MbpsMovilPage';
+import Fibra600MbpsMovilPage from './pages/Fibra600MbpsMovilPage';
+import Fibra1GbpsMovilPage from './pages/Fibra1GbpsMovilPage';
+import Movil40GBPage from './pages/Movil40GBPage';
+import MovilESIMPage from './pages/MovilESIMPage';
+import AlarmasBasicPage from './pages/AlarmasBasicPage';
+import AlarmasPremiumPage from './pages/AlarmasPremiumPage';
+import EnergiaPage from './pages/EnergiaPage';
+import EmpresasServiciosPage from './pages/EmpresasServiciosPage';
+
 interface Plan {
   id: string;
   name: string;
@@ -90,10 +101,28 @@ function App() {
           />
           <Route path="/empresas" element={<EmpresasPage onContractPlan={handleContractPlan} />} />
           <Route path="/seguridad" element={<SecurityPage />} />
-          <Route path="/energia" element={<EnergyPage />} />
           <Route path="/configurador" element={<PlanConfigurator onBack={() => window.history.back()} />} />
           <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
-            <Route path="/politica-cookies" element={<CookiePolicy />} />
+          <Route path="/politica-cookies" element={<CookiePolicy />} />
+          
+          {/* Rutas de servicios de fibra */}
+          <Route path="/fibra-300mbps-movil" element={<Fibra300MbpsMovilPage />} />
+          <Route path="/fibra-600mbps-movil" element={<Fibra600MbpsMovilPage />} />
+          <Route path="/fibra-1gbps-movil" element={<Fibra1GbpsMovilPage />} />
+          
+          {/* Rutas de servicios móviles */}
+          <Route path="/movil-40gb" element={<Movil40GBPage />} />
+          <Route path="/movil-esim" element={<MovilESIMPage />} />
+          
+          {/* Rutas de servicios de alarmas */}
+          <Route path="/alarmas-basica" element={<AlarmasBasicPage />} />
+          <Route path="/alarmas-premium" element={<AlarmasPremiumPage />} />
+          
+          {/* Rutas de servicios de energía */}
+          <Route path="/energia" element={<EnergiaPage />} />
+          
+          {/* Rutas de servicios empresariales */}
+          <Route path="/empresas-servicios" element={<EmpresasServiciosPage />} />
         </Routes>
         
         {showCoverageModal && (

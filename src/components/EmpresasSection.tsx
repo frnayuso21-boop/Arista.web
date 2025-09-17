@@ -80,6 +80,12 @@ const EmpresasSection: React.FC = () => {
 
         {/* Contact Section */}
         <div className="text-center space-y-2">
+          <button 
+            onClick={() => window.location.href = '/empresas'}
+            className="text-blue-400 hover:text-blue-300 transition-colors text-sm underline font-light mb-3 block"
+          >
+            Ver ofertas de empresas
+          </button>
           <p className="text-white/70 text-sm font-light">¿Necesitas ayuda?</p>
           <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
             <a 

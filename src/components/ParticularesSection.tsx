@@ -26,9 +26,12 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
   const [additionalLineData600, setAdditionalLineData600] = useState('40');
   const [additionalLineData1000, setAdditionalLineData1000] = useState('40');
   const [selectedJuntosData, setSelectedJuntosData] = useState('40');
-  const [selectedCompartidosData, setSelectedCompartidosData] = useState('120');
+  const [selectedCompartidosData, setSelectedCompartidosData] = useState('60');
   const [selectedEsimPlan, setSelectedEsimPlan] = useState('voz-15gb');
   const [showContactForm, setShowContactForm] = useState(false);
+  const [selectedTvPlan, setSelectedTvPlan] = useState('600-75gb');
+  const [selectedTvAdditionalLines, setSelectedTvAdditionalLines] = useState('0');
+  const [tvAdditionalLinesCount, setTvAdditionalLinesCount] = useState(0);
 
   const tabs = [
     { id: 'fibra', name: 'Fibra', mobileLabel: 'Fibra', icon: Wifi },
@@ -45,6 +48,25 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Reset additional lines when data plan changes to non-eligible plans
+  useEffect(() => {
+    if (selectedData300 !== '40' && selectedData300 !== '80') {
+      setAdditionalLines300(0);
+    }
+  }, [selectedData300]);
+
+  useEffect(() => {
+    if (selectedData600 !== '40' && selectedData600 !== '80') {
+      setAdditionalLines600(0);
+    }
+  }, [selectedData600]);
+
+  useEffect(() => {
+    if (selectedData1000 !== '40' && selectedData1000 !== '80') {
+      setAdditionalLines1000(0);
+    }
+  }, [selectedData1000]);
 
   const fibraSpeedOptions = [
     { value: '300', label: '300 Mbps', price: 25.99 },
@@ -73,19 +95,15 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
   const juntosDataOptions = [
     { value: '40', label: '40 GB - 8,90€', price: 8.90 },
     { value: '60', label: '60 GB - 9,90€', price: 9.90 },
-    { value: '80', label: '80 GB - 10,90€', price: 10.90 },
-    { value: '120', label: '120 GB - 12,90€', price: 12.90 },
-    { value: '200', label: '200 GB - 16,90€', price: 16.90 },
+    { value: '100', label: '100 GB - 10,90€', price: 10.90 },
+    { value: '200', label: '200 GB - 14,90€', price: 14.90 },
     { value: '400', label: '400 GB - 24,90€', price: 24.90 }
   ];
 
   const compartidosDataOptions = [
-    { value: '40', label: '40 GB - 12,90€', price: 12.90 },
-    { value: '80', label: '80 GB - 16,90€', price: 16.90 },
-    { value: '120', label: '120 GB - 21,90€', price: 21.90 },
-    { value: '200', label: '200 GB - 26,90€', price: 26.90 },
-    { value: '300', label: '300 GB - 31,90€', price: 31.90 },
-    { value: '500', label: '500 GB - 41,90€', price: 41.90 }
+    { value: '60', label: '60 GB - 20,90€', price: 20.90 },
+    { value: '80', label: '80 GB - 25,90€', price: 25.90 },
+    { value: '150', label: '150 GB - 35,90€', price: 35.90 }
   ];
 
   const esimOptions = [
@@ -97,25 +115,75 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
     { value: 'voz-datos', label: 'ARISTA Ilimitada Voz y Datos', price: 23.75 }
   ];
 
+  const tvPlanOptions = [
+    { value: '600-75gb', label: 'Fibra 600 Mbps + 75 GB', price: 54.90 },
+    { value: '1000-unlimited', label: 'Fibra 1000 Mbps + Móvil ilimitado', price: 61.25 }
+  ];
+
+  const tvAdditionalLinesOptions = [
+    { value: '0', label: 'Sin líneas adicionales', price: 0 },
+    { value: 'la-unlimited', label: 'LA Ilimitadas + llamadas', price: 7.36 },
+    { value: 'la-150gb', label: 'LA 150GB + llamadas', price: 6.53 },
+    { value: 'la-75gb', label: 'LA 75GB + llamadas', price: 5.70 },
+    { value: 'la-35gb', label: 'LA 35GB + llamadas', price: 4.88 },
+    { value: 'family-300gb', label: '300GB + 3 llamadas (3x100 GB)', price: 25.54 },
+    { value: 'family-150gb', label: '150GB + 3 llamadas (3x50 GB)', price: 22.23 },
+    { value: 'family-75gb', label: '75GB + 3 llamadas (3x25 GB)', price: 18.93 }
+  ];
+
+  const getAdditionalLinePrice = (dataAmount: string) => {
+    if (dataAmount === '40') return 5.90;
+    if (dataAmount === '80') return 7.90;
+    return 5.90; // default
+  };
+
+  const getTvPlanPrice = () => {
+    const basePlan = tvPlanOptions.find(option => option.value === selectedTvPlan);
+    const additionalLine = tvAdditionalLinesOptions.find(option => option.value === selectedTvAdditionalLines);
+    return (basePlan?.price || 0) + (additionalLine?.price || 0) * (selectedTvAdditionalLines.startsWith('family-') ? 1 : tvAdditionalLinesCount);
+  };
+
+  const getTvPlanFeatures = () => {
+    const basePlan = tvPlanOptions.find(option => option.value === selectedTvPlan);
+    const additionalLine = tvAdditionalLinesOptions.find(option => option.value === selectedTvAdditionalLines);
+    
+    let features = [];
+    if (selectedTvPlan === '600-75gb') {
+      features = ['Fibra 600 Mbps simétrica', '75 GB móvil + llamadas ilimitadas', '🎬 Prime Video incluido', 'Router WiFi 6 Pro incluido'];
+    } else {
+      features = ['Fibra 1000 Mbps simétrica', 'Móvil ilimitado + llamadas ilimitadas', '🎬 Prime Video incluido', 'Router WiFi 6E Premium'];
+    }
+    
+    if (selectedTvAdditionalLines !== '0') {
+      if (selectedTvAdditionalLines.startsWith('family-')) {
+        features.push(additionalLine?.label || '');
+      } else if (tvAdditionalLinesCount > 0) {
+        features.push(`${tvAdditionalLinesCount} línea${tvAdditionalLinesCount > 1 ? 's' : ''} adicional${tvAdditionalLinesCount > 1 ? 'es' : ''}: ${additionalLine?.label || ''}`);
+      }
+    }
+    
+    return features;
+  };
+
   const getPrice300 = () => {
-    const basePrice = fibraSpeedOptions[0].price;
-    const dataPrice = dataOptions300.find(opt => opt.value === selectedData300)?.price || 0;
-    const additionalLinesPrice = additionalLines300 * 15;
-    return basePrice + dataPrice + additionalLinesPrice;
+    const selectedOption = dataOptions300.find(opt => opt.value === selectedData300);
+    const basePrice = selectedOption ? selectedOption.price : 29.90;
+    const additionalLinesPrice = additionalLines300 * getAdditionalLinePrice(additionalLineData300);
+    return basePrice + additionalLinesPrice;
   };
 
   const getPrice600 = () => {
-    const basePrice = fibraSpeedOptions[1].price;
-    const dataPrice = dataOptions600.find(opt => opt.value === selectedData600)?.price || 0;
-    const additionalLinesPrice = additionalLines600 * 15;
-    return basePrice + dataPrice + additionalLinesPrice;
+    const selectedOption = dataOptions600.find(opt => opt.value === selectedData600);
+    const basePrice = selectedOption ? selectedOption.price : 32.89;
+    const additionalLinesPrice = additionalLines600 * getAdditionalLinePrice(additionalLineData600);
+    return basePrice + additionalLinesPrice;
   };
 
   const getPrice1000 = () => {
-    const basePrice = fibraSpeedOptions[2].price;
-    const dataPrice = dataOptions1000.find(opt => opt.value === selectedData1000)?.price || 0;
-    const additionalLinesPrice = additionalLines1000 * 15;
-    return basePrice + dataPrice + additionalLinesPrice;
+    const selectedOption = dataOptions1000.find(opt => opt.value === selectedData1000);
+    const basePrice = selectedOption ? selectedOption.price : 37.90;
+    const additionalLinesPrice = additionalLines1000 * getAdditionalLinePrice(additionalLineData1000);
+    return basePrice + additionalLinesPrice;
   };
 
   const getSelectedJuntosPrice = () => {
@@ -250,17 +318,17 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 300 Mbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-blue-600 mb-1">29.90€</div>
+                  <div className="text-3xl font-bold text-blue-600 mb-1">{getPrice300().toFixed(2)}€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-4">
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                     300 Mbps simétrica
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    40 GB móvil
+                    {selectedData300} GB móvil
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -271,12 +339,82 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     Router WiFi 6 incluido
                   </li>
                 </ul>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
+                  <select
+                    value={selectedData300}
+                    onChange={(e) => setSelectedData300(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    {dataOptions300.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {(selectedData300 === '40' || selectedData300 === '80') && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                    <div className="mb-3">
+                      <select
+                        value={additionalLineData300}
+                        onChange={(e) => setAdditionalLineData300(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="40">40 GB - 5,90€/mes</option>
+                        <option value="80">80 GB - 7,90€/mes</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-600">
+                          {additionalLines300} línea{additionalLines300 !== 1 ? 's' : ''} adicional{additionalLines300 !== 1 ? 'es' : ''}
+                        </span>
+                        {additionalLines300 > 0 && (
+                          <span className="text-sm text-blue-600 font-medium">
+                            +{(additionalLines300 * getAdditionalLinePrice(additionalLineData300)).toFixed(2)}€/mes
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setAdditionalLines300(Math.max(0, additionalLines300 - 1))}
+                          disabled={additionalLines300 === 0}
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center font-medium">{additionalLines300}</span>
+                        <button
+                          onClick={() => setAdditionalLines300(additionalLines300 + 1)}
+                          className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    {additionalLines300 > 0 && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional incluye {additionalLineData300} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData300).toFixed(2)}€/mes
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <button
                   onClick={() => onContractPlan({
                     id: 'fibra-movil-300',
-                    name: 'Fibra 300 Mbps + Móvil 40GB',
-                    price: 29.90,
-                    features: ['300 Mbps simétrica', '40 GB móvil', 'Llamadas ilimitadas', 'Router WiFi 6 incluido']
+                    name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
+                    price: getPrice300(),
+                    features: [
+                      '300 Mbps simétrica', 
+                      `${selectedData300} GB móvil`, 
+                      'Llamadas ilimitadas', 
+                      'Router WiFi 6 incluido',
+                      ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
+                    ]
                   })}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
@@ -296,17 +434,17 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 600 Mbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-purple-600 mb-1">32.89€</div>
+                  <div className="text-3xl font-bold text-purple-600 mb-1">{getPrice600().toFixed(2)}€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-4">
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                     600 Mbps simétrica
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    40 GB móvil
+                    {selectedData600} GB móvil
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -317,12 +455,82 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     Router WiFi 6 Pro incluido
                   </li>
                 </ul>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
+                  <select
+                    value={selectedData600}
+                    onChange={(e) => setSelectedData600(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  >
+                    {dataOptions600.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {(selectedData600 === '40' || selectedData600 === '80') && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                    <div className="mb-3">
+                      <select
+                        value={additionalLineData600}
+                        onChange={(e) => setAdditionalLineData600(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                      >
+                        <option value="40">40 GB - 5,90€/mes</option>
+                        <option value="80">80 GB - 7,90€/mes</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-600">
+                          {additionalLines600} línea{additionalLines600 !== 1 ? 's' : ''} adicional{additionalLines600 !== 1 ? 'es' : ''}
+                        </span>
+                        {additionalLines600 > 0 && (
+                          <span className="text-sm text-purple-600 font-medium">
+                            +{(additionalLines600 * getAdditionalLinePrice(additionalLineData600)).toFixed(2)}€/mes
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setAdditionalLines600(Math.max(0, additionalLines600 - 1))}
+                          disabled={additionalLines600 === 0}
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center font-medium">{additionalLines600}</span>
+                        <button
+                          onClick={() => setAdditionalLines600(additionalLines600 + 1)}
+                          className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    {additionalLines600 > 0 && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional incluye {additionalLineData600} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData600).toFixed(2)}€/mes
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <button
                   onClick={() => onContractPlan({
                     id: 'fibra-movil-600',
-                    name: 'Fibra 600 Mbps + Móvil 40GB',
-                    price: 32.89,
-                    features: ['600 Mbps simétrica', '40 GB móvil', 'Llamadas ilimitadas', 'Router WiFi 6 Pro incluido']
+                    name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
+                    price: getPrice600(),
+                    features: [
+                      '600 Mbps simétrica', 
+                      `${selectedData600} GB móvil`, 
+                      'Llamadas ilimitadas', 
+                      'Router WiFi 6 Pro incluido',
+                      ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
+                    ]
                   })}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
@@ -337,17 +545,17 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 1 Gbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-emerald-600 mb-1">37.90€</div>
+                  <div className="text-3xl font-bold text-emerald-600 mb-1">{getPrice1000().toFixed(2)}€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-4">
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                     1 Gbps simétrica
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    40 GB móvil
+                    {selectedData1000} GB móvil
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -358,12 +566,82 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     Router WiFi 6E Premium
                   </li>
                 </ul>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
+                  <select
+                    value={selectedData1000}
+                    onChange={(e) => setSelectedData1000(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  >
+                    {dataOptions1000.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {(selectedData1000 === '40' || selectedData1000 === '80') && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                    <div className="mb-3">
+                      <select
+                        value={additionalLineData1000}
+                        onChange={(e) => setAdditionalLineData1000(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+                      >
+                        <option value="40">40 GB - 5,90€/mes</option>
+                        <option value="80">80 GB - 7,90€/mes</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-600">
+                          {additionalLines1000} línea{additionalLines1000 !== 1 ? 's' : ''} adicional{additionalLines1000 !== 1 ? 'es' : ''}
+                        </span>
+                        {additionalLines1000 > 0 && (
+                          <span className="text-sm text-emerald-600 font-medium">
+                            +{(additionalLines1000 * getAdditionalLinePrice(additionalLineData1000)).toFixed(2)}€/mes
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setAdditionalLines1000(Math.max(0, additionalLines1000 - 1))}
+                          disabled={additionalLines1000 === 0}
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center font-medium">{additionalLines1000}</span>
+                        <button
+                          onClick={() => setAdditionalLines1000(additionalLines1000 + 1)}
+                          className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    {additionalLines1000 > 0 && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional incluye {additionalLineData1000} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData1000).toFixed(2)}€/mes
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <button
                   onClick={() => onContractPlan({
                     id: 'fibra-movil-1000',
-                    name: 'Fibra 1 Gbps + Móvil 40GB',
-                    price: 37.90,
-                    features: ['1 Gbps simétrica', '40 GB móvil', 'Llamadas ilimitadas', 'Router WiFi 6E Premium']
+                    name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
+                    price: getPrice1000(),
+                    features: [
+                      '1 Gbps simétrica', 
+                      `${selectedData1000} GB móvil`, 
+                      'Llamadas ilimitadas', 
+                      'Router WiFi 6E Premium',
+                      ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
+                    ]
                   })}
                   className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
@@ -530,7 +808,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold flex items-center shadow-lg">
                     <Star className="w-4 h-4 mr-2" />
-                    DEPORTIVO
+                    SOLO EMPRESAS
                   </span>
                 </div>
                 <div className="text-center mb-8">
@@ -538,6 +816,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     <Tv className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Paquete Deportivo Completo</h3>
+                  <p className="text-red-600 font-semibold mb-3">EXCLUSIVO PARA EMPRESAS</p>
                   <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
                     <div className="text-4xl font-black mb-1">350€</div>
                     <div className="text-lg font-semibold">/mes</div>
@@ -591,48 +870,108 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
           )}
 
           {activeTab === 'fibra-movil-tv' && (
-            <div className="max-w-md mx-auto">
-              <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 border-2 border-gradient-to-r from-purple-500 to-pink-500 shadow-lg relative">
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-gradient-to-r from-purple-500 to-pink-500 shadow-lg relative">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-xs font-bold flex items-center shadow-lg">
                     <Star className="w-3 h-3 mr-1" />
                     OFERTA ESPECIAL
                   </span>
                 </div>
-                <div className="text-center pt-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Fibra + Móvil + TV</h3>
-                  <div className="text-2xl font-bold text-purple-600 mb-4">54.90€/mes</div>
-                  <p className="text-gray-600 text-sm mb-6">Pack completo con todo incluido</p>
-                  <ul className="text-left space-y-2 mb-6">
-                    <li className="flex items-center text-sm text-gray-600">
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      Fibra 600 Mbps
-                    </li>
-                    <li className="flex items-center text-sm text-gray-600">
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      Móvil 80GB + llamadas ilimitadas
-                    </li>
-                    <li className="flex items-center text-sm text-gray-600">
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                      Prime Video de regalo
-                    </li>
-                  </ul>
-                  <button
-                    onClick={() => onContractPlan({
-                      id: 'fibra-movil-tv-pack',
-                      name: 'Fibra + Móvil + TV',
-                      price: 54.90,
-                      features: [
-                        'Fibra 600 Mbps',
-                        'Móvil 80GB + llamadas ilimitadas',
-                        'Prime Video de regalo'
-                      ]
-                    })}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                  >
-                    Lo quiero
-                  </button>
+                
+                <div className="text-center pt-4 mb-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Fibra + Móvil + TV</h3>
+                  <div className="text-3xl font-bold text-purple-600 mb-2">{getTvPlanPrice().toFixed(2)}€</div>
+                  <div className="text-gray-500 text-sm">/mes</div>
+                  <p className="text-gray-600 text-sm mt-2">Pack completo todo incluido</p>
                 </div>
+
+                {/* Plan Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Selecciona tu plan:</label>
+                  <select
+                    value={selectedTvPlan}
+                    onChange={(e) => setSelectedTvPlan(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                  >
+                    {tvPlanOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label} - {option.price.toFixed(2)}€
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Additional Lines Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <select
+                    value={selectedTvAdditionalLines}
+                    onChange={(e) => {
+                      setSelectedTvAdditionalLines(e.target.value);
+                      if (e.target.value === '0' || e.target.value.startsWith('family-')) {
+                        setTvAdditionalLinesCount(0);
+                      } else {
+                        setTvAdditionalLinesCount(1);
+                      }
+                    }}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                  >
+                    {tvAdditionalLinesOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label} {option.price > 0 ? `- ${option.price.toFixed(2)}€` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Additional Lines Counter */}
+                {selectedTvAdditionalLines !== '0' && !selectedTvAdditionalLines.startsWith('family-') && (
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Cantidad de líneas adicionales:</label>
+                    <div className="flex items-center justify-center space-x-4">
+                      <button
+                        onClick={() => setTvAdditionalLinesCount(Math.max(0, tvAdditionalLinesCount - 1))}
+                        disabled={tvAdditionalLinesCount === 0}
+                        className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="w-12 text-center font-medium text-lg">{tvAdditionalLinesCount}</span>
+                      <button
+                        onClick={() => setTvAdditionalLinesCount(tvAdditionalLinesCount + 1)}
+                        className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Features List */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Incluye:</h4>
+                  <ul className="space-y-2">
+                    {getTvPlanFeatures().map((feature, index) => (
+                      <li key={index} className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <button
+                  onClick={() => onContractPlan({
+                    id: 'fibra-movil-tv-configurado',
+                    name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
+                    price: getTvPlanPrice(),
+                    features: getTvPlanFeatures()
+                  })}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg text-lg"
+                >
+                  Lo quiero - {getTvPlanPrice().toFixed(2)}€/mes
+                </button>
               </div>
             </div>
           )}

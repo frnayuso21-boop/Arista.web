@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 text-white py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8">
           {/* Company Info */}
           <div>
             <img 
@@ -45,16 +45,51 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Services */}
+          {/* Particulares */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Servicios</h3>
+            <h3 className="text-lg font-semibold mb-6">Particulares</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Fibra Óptica</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Móvil 5G</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Fibra + Móvil</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">TV Premium</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Soluciones Empresariales</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Centralita Virtual</a></li>
+              <li><Link to="/fibra-300mbps-movil" className="text-gray-300 hover:text-white transition-colors">Fibra 300Mbps + Móvil</Link></li>
+              <li><Link to="/fibra-600mbps-movil" className="text-gray-300 hover:text-white transition-colors">Fibra 600Mbps + Móvil</Link></li>
+              <li><Link to="/fibra-1gbps-movil" className="text-gray-300 hover:text-white transition-colors">Fibra 1Gbps + Móvil</Link></li>
+              <li><Link to="/movil-40gb" className="text-gray-300 hover:text-white transition-colors">Móvil 40GB</Link></li>
+              <li><Link to="/movil-esim" className="text-gray-300 hover:text-white transition-colors">Móvil eSIM</Link></li>
+            </ul>
+          </div>
+
+          {/* Empresas */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Empresas</h3>
+            <ul className="space-y-3">
+              <li><Link to="/empresas-servicios" className="text-gray-300 hover:text-white transition-colors">Soluciones Empresariales</Link></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Conectividad Empresarial</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Ciberseguridad</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Cloud Computing</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Telefonía IP</a></li>
+            </ul>
+          </div>
+
+          {/* Energía */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Energía</h3>
+            <ul className="space-y-3">
+              <li><Link to="/energia" className="text-gray-300 hover:text-white transition-colors">Tarifas de Luz</Link></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Energía Renovable</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Tarifa Básica</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Tarifa Ahorro</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Tarifa Premium</a></li>
+            </ul>
+          </div>
+
+          {/* Seguridad */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Seguridad</h3>
+            <ul className="space-y-3">
+              <li><Link to="/alarmas-basica" className="text-gray-300 hover:text-white transition-colors">Alarma Básica</Link></li>
+              <li><Link to="/alarmas-premium" className="text-gray-300 hover:text-white transition-colors">Alarma Premium</Link></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Videovigilancia</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Control de Accesos</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Monitorización 24/7</a></li>
             </ul>
           </div>
 
