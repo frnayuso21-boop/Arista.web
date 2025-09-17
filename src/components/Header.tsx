@@ -248,14 +248,14 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
             </button>
             
             <button
-              onClick={() => scrollToSection('energia')}
+              onClick={() => navigate('/energia')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
             >
               Energía
             </button>
             
             <button
-              onClick={() => scrollToSection('seguridad')}
+              onClick={() => navigate('/seguridad')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
             >
               Seguridad
