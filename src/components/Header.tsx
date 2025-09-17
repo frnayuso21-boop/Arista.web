@@ -36,6 +36,20 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
     };
   }, []);
 
+  // Bloquear scroll del body cuando el menú móvil está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup al desmontar el componente
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -217,8 +231,8 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`lg:hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <div className="py-3 space-y-2 bg-black/95 backdrop-blur-md rounded-b-lg border-t border-white/10">
+        <div className={`lg:hidden transition-all duration-300 ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <div className="py-3 space-y-2 bg-black/95 backdrop-blur-md rounded-b-lg border-t border-white/10 max-h-80 overflow-y-auto">
             <button
               onClick={() => scrollToParticularesWithTab('fibra')}
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
