@@ -108,7 +108,7 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
             <CheckCircle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
-            <h3 className="text-white font-semibold mb-2">Sin permanencia</h3>
+            <h3 className="text-white font-semibold mb-2">Máxima flexibilidad</h3>
             <p className="text-white/70 text-sm">Libertad total</p>
           </div>
         </div>
@@ -129,7 +129,7 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
               'Cambio gratuito y sin cortes',
               'Facturación transparente sin sorpresas',
               'Atención al cliente 24/7',
-              'Sin permanencia ni penalizaciones',
+              'Máxima flexibilidad',
               'Factura electrónica gratuita',
               'Consejos de eficiencia energética',
               'Soporte técnico especializado'
@@ -229,7 +229,7 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
             'Cambio gratuito y sin cortes',
             'Facturación transparente sin sorpresas',
             'Atención al cliente 24/7',
-            'Sin permanencia ni penalizaciones'
+            'Máxima flexibilidad'
           ]
         }}
       />

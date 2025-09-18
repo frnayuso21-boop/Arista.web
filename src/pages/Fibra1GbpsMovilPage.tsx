@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Wifi, Smartphone, CheckCircle, Shield, Clock, Users, Star, Zap, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Wifi, Smartphone, CheckCircle, Shield, Clock, Users, Star, ChevronDown, Zap } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AristaLogo from '../components/AristaLogo';
+import SimpleContractForm from '../components/SimpleContractForm';
 
 interface Fibra1GbpsMovilPageProps {
   onBack?: () => void;
@@ -10,6 +11,7 @@ interface Fibra1GbpsMovilPageProps {
 
 const Fibra1GbpsMovilPage: React.FC<Fibra1GbpsMovilPageProps> = ({ onBack }) => {
   const [selectedMovilGB, setSelectedMovilGB] = useState('40gb');
+  const [showContractForm, setShowContractForm] = useState(false);
   
   const movilOptions = [
     { id: '40gb', name: '40 GB', price: 2.90, description: 'Voz ilimitada' },
@@ -23,8 +25,20 @@ const Fibra1GbpsMovilPage: React.FC<Fibra1GbpsMovilPageProps> = ({ onBack }) => 
   const getTotalPrice = () => getBasePrice() + getMovilPrice();
   
   const handleContract = () => {
-    // Lógica para contratar el plan
-    console.log('Contratando plan Fibra 1 Gbps + Móvil', selectedMovilGB);
+    setShowContractForm(true);
+  };
+
+  const currentPlan = {
+    id: 'fibra-1gbps-movil',
+    name: `Fibra 1 Gbps + Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name}`,
+    price: getTotalPrice(),
+    features: [
+      'Fibra óptica 1 Gbps',
+      `Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name} con voz ilimitada`,
+      'Instalación gratuita',
+      'Router WiFi 6 incluido',
+      'Velocidad máxima garantizada'
+    ]
   };
 
   const handleScrollToParticularesWithTab = (tab: string) => {
@@ -194,7 +208,7 @@ const Fibra1GbpsMovilPage: React.FC<Fibra1GbpsMovilPageProps> = ({ onBack }) => 
               'Router WiFi 6E Premium',
               'Instalación y configuración gratuita',
               'Soporte técnico premium 24/7',
-              'Sin permanencia',
+              'Máxima flexibilidad',
               'Descuento combo aplicado',
               'Prioridad en red',
               'Portabilidad gratuita'
@@ -328,6 +342,14 @@ const Fibra1GbpsMovilPage: React.FC<Fibra1GbpsMovilPageProps> = ({ onBack }) => 
       </div>
 
       <Footer />
+      
+      {showContractForm && (
+        <SimpleContractForm 
+          isOpen={showContractForm}
+          onClose={() => setShowContractForm(false)}
+          plan={currentPlan}
+        />
+      )}
     </div>
   );
 };

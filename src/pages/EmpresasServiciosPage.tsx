@@ -91,7 +91,7 @@ const EmpresasServiciosPage: React.FC<EmpresasServiciosPageProps> = ({ onBack })
             <ul className="space-y-2 mb-6">
               <li className="flex items-center text-white/80">
                 <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
-                Fibra hasta 10 Gbps
+                Fibra hasta 1 Gbps
               </li>
               <li className="flex items-center text-white/80">
                 <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
@@ -99,7 +99,7 @@ const EmpresasServiciosPage: React.FC<EmpresasServiciosPageProps> = ({ onBack })
               </li>
               <li className="flex items-center text-white/80">
                 <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
-                SLA garantizado
+                SLA garantizado (99.9% disponibilidad)
               </li>
             </ul>
             <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-200">
@@ -176,7 +176,7 @@ const EmpresasServiciosPage: React.FC<EmpresasServiciosPageProps> = ({ onBack })
                 <CheckCircle className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white mb-2">SLA Garantizado</h3>
-              <p className="text-white/70 text-sm">99.9% de disponibilidad garantizada</p>
+              <p className="text-white/70 text-sm">Acuerdo de Nivel de Servicio - 99.9% disponibilidad</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">

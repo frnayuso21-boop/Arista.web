@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Camera, Smartphone, Tablet, Radio, DoorOpen, Phone, MessageCircle, Mail, X } from 'lucide-react';
+import { Shield, Camera, Smartphone, Phone, MessageCircle, Mail, X } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import ContactForm from './ContactForm';
@@ -15,7 +15,6 @@ interface SecurityPackage {
 
 const SecurityPage: React.FC = () => {
   const [customerType, setCustomerType] = useState<'residential' | 'business'>('residential');
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [showContactOptions, setShowContactOptions] = useState(false);
   const [showQuoteForm, setShowQuoteForm] = useState(false);
 
@@ -63,8 +62,6 @@ const SecurityPage: React.FC = () => {
       ]
     }
   ];
-
-  const installationCost = customerType === 'business' ? 79 : 0;
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -171,11 +168,11 @@ const SecurityPage: React.FC = () => {
         )}
 
         {/* Packages Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
           {packages.map((pkg) => (
             <div
               key={pkg.id}
-              className={`bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl relative ${
+              className={`bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl relative ${
                 pkg.id === 'standard' ? 'ring-2 ring-blue-500 transform scale-105' : ''
               }`}
             >
@@ -187,9 +184,9 @@ const SecurityPage: React.FC = () => {
                   </div>
                 </div>
               )}
-              <div className="p-6">
+              <div className="p-4">
                 {/* Package Header */}
-                <div className="text-center mb-6">
+                <div className="text-center mb-4">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
                     <div className="text-blue-600">{pkg.icon}</div>
                   </div>
@@ -218,7 +215,7 @@ const SecurityPage: React.FC = () => {
 
                 {/* Installation Cost */}
                 {customerType === 'business' && (
-                  <div className="bg-gray-100 rounded-lg p-3 mb-6 border border-gray-200">
+                  <div className="bg-gray-100 rounded-lg p-3 mb-4 border border-gray-200">
                     <div className="text-sm text-gray-700">
                       Instalación: <span className="font-semibold text-gray-900">79€</span>
                     </div>
@@ -238,11 +235,11 @@ const SecurityPage: React.FC = () => {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl shadow-lg p-6 text-center max-w-3xl mx-auto">
+        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl shadow-md p-4 text-center max-w-3xl mx-auto">
           <h3 className="text-2xl font-bold text-white mb-4">
             ¿Necesitas más información?
           </h3>
-          <p className="text-white/80 mb-6">
+          <p className="text-white/80 mb-4">
             Nuestros expertos en seguridad están aquí para ayudarte a elegir el mejor sistema para tus necesidades
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center relative">
@@ -297,8 +294,8 @@ const SecurityPage: React.FC = () => {
         {showQuoteForm && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
+              <div className="p-4">
+                <div className="flex justify-between items-center mb-4">
                   <h3 className="text-2xl font-bold text-gray-900">Solicitar Presupuesto</h3>
                   <button
                     onClick={() => setShowQuoteForm(false)}

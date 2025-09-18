@@ -6,26 +6,26 @@ const EmpresasSection: React.FC = () => {
     {
       icon: Building2,
       title: 'Fibra Empresarial',
-      description: 'Conexiones simétricas hasta 10 Gbps con SLA garantizado',
-      features: ['Ancho de banda dedicado', 'IP estática incluida', 'Soporte 24/7', 'SLA del 99.9%']
+      description: 'Conexiones simétricas hasta 1 Gbps con SLA garantizado',
+      features: ['Ancho de banda dedicado', 'IP estática incluida', 'Soporte 24/7', 'SLA del 99.9% (Acuerdo de Nivel de Servicio que garantiza disponibilidad)']
     },
     {
       icon: Phone,
       title: 'Centralita Virtual',
       description: 'Sistema de telefonía IP completo para tu empresa',
-      features: ['Extensiones ilimitadas', 'Grabación de llamadas', 'IVR personalizable', 'App móvil']
+      features: ['Extensiones ilimitadas', 'Grabación de llamadas', 'IVR personalizable', 'Panel web de gestión']
     },
     {
       icon: Shield,
       title: 'Seguridad Avanzada',
       description: 'Protección integral con firewall y antivirus empresarial',
-      features: ['Firewall dedicado', 'Protección DDoS', 'VPN empresarial', 'Backup automático']
+      features: ['Firewall dedicado', 'Protección DDoS', 'Monitorización 24/7', 'Backup automático']
     },
     {
       icon: Server,
       title: 'Cloud Services',
       description: 'Servicios en la nube escalables y seguros',
-      features: ['Servidores virtuales', 'Backup en la nube', 'Office 365', 'Migración gratuita']
+      features: ['Servidores virtuales', 'Backup en la nube', 'Almacenamiento escalable', 'Soporte técnico especializado']
     }
   ];
 

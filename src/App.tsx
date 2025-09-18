@@ -7,7 +7,7 @@ import EnergyPage from './components/EnergyPage';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import CookiePolicy from './components/CookiePolicy';
 import CoverageModal from './components/CoverageModal';
-import ContractModal from './components/ContractModal';
+import SimpleContractForm from './components/SimpleContractForm';
 import PlanConfigurator from './components/PlanConfigurator';
 import PlanDetailPage from './components/PlanDetailPage';
 import CookieBanner from './components/CookieBanner';
@@ -23,6 +23,7 @@ import AlarmasBasicPage from './pages/AlarmasBasicPage';
 import AlarmasPremiumPage from './pages/AlarmasPremiumPage';
 import EnergiaPage from './pages/EnergiaPage';
 import EmpresasServiciosPage from './pages/EmpresasServiciosPage';
+import FAQPage from './pages/FAQPage';
 
 interface Plan {
   id: string;
@@ -123,6 +124,9 @@ function App() {
           
           {/* Rutas de servicios empresariales */}
           <Route path="/empresas-servicios" element={<EmpresasServiciosPage />} />
+          
+          {/* Ruta de FAQ */}
+          <Route path="/preguntas-frecuentes" element={<FAQPage />} />
         </Routes>
         
         {showCoverageModal && (
@@ -133,7 +137,7 @@ function App() {
         )}
         
         {showContractModal && (
-          <ContractModal 
+          <SimpleContractForm 
             isOpen={showContractModal} 
             onClose={() => {
               console.log('Closing contract modal');

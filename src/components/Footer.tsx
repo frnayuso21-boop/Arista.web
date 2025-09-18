@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
               <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Área Cliente</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Estado del Servicio</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contactar Soporte</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+              <li><Link to="/preguntas-frecuentes" className="text-gray-300 hover:text-white transition-colors">Preguntas Frecuentes</Link></li>
             </ul>
           </div>
 

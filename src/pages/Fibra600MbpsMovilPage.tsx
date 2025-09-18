@@ -3,6 +3,7 @@ import { ArrowLeft, Wifi, Smartphone, CheckCircle, Shield, Clock, Users, Star, C
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AristaLogo from '../components/AristaLogo';
+import SimpleContractForm from '../components/SimpleContractForm';
 
 interface Fibra600MbpsMovilPageProps {
   onBack?: () => void;
@@ -10,6 +11,7 @@ interface Fibra600MbpsMovilPageProps {
 
 const Fibra600MbpsMovilPage: React.FC<Fibra600MbpsMovilPageProps> = ({ onBack }) => {
   const [selectedMovilGB, setSelectedMovilGB] = useState('40gb');
+  const [showContractForm, setShowContractForm] = useState(false);
   
   const movilOptions = [
     { id: '40gb', name: '40 GB', price: 2.90, description: 'Voz ilimitada' },
@@ -23,8 +25,20 @@ const Fibra600MbpsMovilPage: React.FC<Fibra600MbpsMovilPageProps> = ({ onBack })
   const getTotalPrice = () => getBasePrice() + getMovilPrice() - 5.00; // Descuento combo
   
   const handleContract = () => {
-    // Lógica para contratar el plan
-    console.log('Contratando plan Fibra 600 Mbps + Móvil', selectedMovilGB);
+    setShowContractForm(true);
+  };
+
+  const currentPlan = {
+    id: 'fibra-600-movil',
+    name: `Fibra 600 Mbps + Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name}`,
+    price: getTotalPrice(),
+    features: [
+      'Fibra óptica 600 Mbps',
+      `Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name} con voz ilimitada`,
+      'Instalación gratuita',
+      'Router WiFi incluido',
+      'Descuento combo aplicado'
+    ]
   };
 
   const handleScrollToParticularesWithTab = (tab: string) => {
@@ -190,7 +204,7 @@ const Fibra600MbpsMovilPage: React.FC<Fibra600MbpsMovilPageProps> = ({ onBack })
               'Router WiFi 6 Pro de alta gama',
               'Instalación y configuración gratuita',
               'Soporte técnico prioritario 24/7',
-              'Sin permanencia',
+              'Máxima flexibilidad',
               'Descuento combo aplicado',
               'Portabilidad gratuita'
             ].map((benefit, index) => (
@@ -285,6 +299,14 @@ const Fibra600MbpsMovilPage: React.FC<Fibra600MbpsMovilPageProps> = ({ onBack })
       </div>
 
       <Footer />
+      
+      {showContractForm && (
+        <SimpleContractForm 
+          isOpen={showContractForm}
+          onClose={() => setShowContractForm(false)}
+          plan={currentPlan}
+        />
+      )}
     </div>
   );
 };

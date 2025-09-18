@@ -182,7 +182,7 @@ const Movil40GBPage: React.FC<Movil40GBPageProps> = ({ onBack }) => {
             </div>
             <div className="bg-white/5 rounded-xl p-6 text-center">
               <CheckCircle className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
-              <h3 className="text-white font-semibold mb-2">Sin permanencia</h3>
+              <h3 className="text-white font-semibold mb-2">Máxima flexibilidad</h3>
               <p className="text-white/70 text-sm">Libertad total</p>
             </div>
           </div>
@@ -207,7 +207,7 @@ const Movil40GBPage: React.FC<Movil40GBPageProps> = ({ onBack }) => {
               'App Mi Arista con gestión completa',
               'Buzón de voz visual',
               'Identificador de llamadas',
-              'Sin permanencia ni penalizaciones'
+              'Máxima flexibilidad sin penalizaciones'
             ].map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
@@ -267,7 +267,7 @@ const Movil40GBPage: React.FC<Movil40GBPageProps> = ({ onBack }) => {
             Conecta sin límites con 40GB
           </h2>
           <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-            Disfruta de la mejor conectividad móvil con datos suficientes para todo lo que necesitas. Sin sorpresas, sin permanencia
+            Disfruta de la mejor conectividad móvil con datos suficientes para todo lo que necesitas. Sin sorpresas, máxima flexibilidad
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

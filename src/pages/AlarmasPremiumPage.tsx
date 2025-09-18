@@ -256,7 +256,7 @@ const AlarmasPremiumPage: React.FC<AlarmasPremiumPageProps> = ({ onBack }) => {
               'Mantenimiento anual incluido',
               'Actualizaciones automáticas de firmware',
               'Garantía extendida de 3 años',
-              'Sin permanencia',
+              'Máxima flexibilidad',
               'Descuentos en servicios adicionales'
             ].map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">

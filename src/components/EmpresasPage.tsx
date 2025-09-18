@@ -48,7 +48,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         'Fibra óptica simétrica',
         'IP fija incluida',
         'Soporte técnico 24/7',
-        'Sin permanencia',
+        'Máxima flexibilidad',
         'Instalación gratuita'
       ],
       popular: false
@@ -61,7 +61,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         'Fibra óptica simétrica',
         'IP fija incluida',
         'Soporte técnico 24/7',
-        'Sin permanencia',
+        'Máxima flexibilidad',
         'Instalación gratuita',
         'Router WiFi 6 premium'
       ],
@@ -75,7 +75,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         'Fibra óptica simétrica',
         'IP fija incluida',
         'Soporte técnico 24/7',
-        'Sin permanencia',
+        'Máxima flexibilidad',
         'Instalación gratuita',
         'Router WiFi 6 premium',
         'Backup 4G incluido'
@@ -427,7 +427,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
                 </li>
                 <li className="flex items-center text-gray-700">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mr-3 flex-shrink-0"></div>
-                  <span className="font-light">Sin permanencia</span>
+                  <span className="font-light">Máxima flexibilidad</span>
                 </li>
                 <li className="flex items-center text-gray-700">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mr-3 flex-shrink-0"></div>
@@ -442,7 +442,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
                 }}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-light"
               >
-                Lo quiero
+                Pide tu presupuesto sin compromiso
               </button>
             </div>
           </div>

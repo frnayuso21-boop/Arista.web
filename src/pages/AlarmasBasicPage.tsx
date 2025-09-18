@@ -194,7 +194,7 @@ const AlarmasBasicPage: React.FC<AlarmasBasicPageProps> = ({ onBack }) => {
               'Notificaciones instantáneas',
               'Grabación en la nube (30 días)',
               'Soporte técnico incluido',
-              'Sin permanencia',
+              'Máxima flexibilidad',
               'Mantenimiento incluido'
             ].map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">

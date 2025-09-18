@@ -3,7 +3,9 @@ import Header from './Header';
 import Hero from './Hero';
 import ParticularesSection from './ParticularesSection';
 import EmpresasSection from './EmpresasSection';
+import TVSection from './TVSection';
 import CoverageSection from './CoverageSection';
+import FAQSection from './FAQSection';
 import Footer from './Footer';
 
 interface Plan {
@@ -56,7 +58,7 @@ const HomePage: React.FC<HomePageProps> = ({
       window.dispatchEvent(event);
       
       // Then scroll to the section
-      element.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 100);
     }
   };
 
@@ -77,6 +79,8 @@ const HomePage: React.FC<HomePageProps> = ({
         />
         <CoverageSection onCoverageCheck={onCoverageCheck} />
         <EmpresasSection />
+        <TVSection onContractPlan={onContractPlan} />
+        <FAQSection />
       </main>
       
       <Footer />

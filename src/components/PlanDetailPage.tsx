@@ -70,7 +70,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Router WiFi 6 de última generación',
           'Instalación y configuración gratuita',
           'Soporte técnico 24/7',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'Portabilidad gratuita'
         ]
       };
@@ -96,7 +96,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Router WiFi 6 Pro de alta gama',
           'Instalación y configuración gratuita',
           'Soporte técnico prioritario 24/7',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'Descuento combo aplicado',
           'Portabilidad gratuita'
         ]
@@ -123,7 +123,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Router WiFi 6E Premium',
           'Instalación y configuración gratuita',
           'Soporte técnico premium 24/7',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'Descuento combo aplicado',
           'Prioridad en red',
           'Portabilidad gratuita'
@@ -151,7 +151,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Roaming UE incluido (15 GB)',
           'Activación inmediata',
           'Portabilidad gratuita',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'Hotspot incluido',
           'Compatible con eSIM'
         ]
@@ -179,7 +179,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Roaming UE incluido (25 GB)',
           'Activación inmediata',
           'Portabilidad gratuita',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'Hotspot incluido',
           'Compatible con eSIM'
         ]
@@ -207,7 +207,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
           'Compatible con dispositivos eSIM',
           'Cambio de dispositivo fácil',
           'Roaming UE incluido (20 GB)',
-          'Sin permanencia',
+          'Máxima flexibilidad',
           'SMS ilimitados',
           'Hotspot incluido'
         ]
@@ -332,27 +332,7 @@ const PlanDetailPage: React.FC<PlanDetailPageProps> = ({ plan, onBack, onContrac
             </div>
           </div>
 
-          {/* CTA Section */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">¿Listo para contratar?</h2>
-            <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-              Únete a miles de clientes satisfechos que ya disfrutan de la mejor conectividad con ARISTA.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => onContract(plan)}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Lo quiero
-              </button>
-              <button
-                onClick={onBack}
-                className="px-8 py-4 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-200"
-              >
-                Ver otros planes
-              </button>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>

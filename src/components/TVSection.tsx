@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tv, Star, CheckCircle, Trophy, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Tv, Star, CheckCircle, Trophy, Zap, Phone, Mail, X } from 'lucide-react';
 
 interface Plan {
   id: string;
@@ -13,6 +13,15 @@ interface TVSectionProps {
 }
 
 const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
+  const [showContactModal, setShowContactModal] = useState(false);
+
+  const scrollToParticulares = () => {
+    const element = document.getElementById('particulares');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const sportsChannels = [
     'La Liga',
     'UEFA Champions League',
@@ -58,7 +67,7 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
           </p>
           <div className="inline-flex items-center bg-green-500/20 text-green-300 px-4 py-2 rounded-full text-sm font-medium">
             <Zap className="w-4 h-4 mr-2" />
-            SIN PERMANENCIA
+            MÁXIMA FLEXIBILIDAD
           </div>
         </div>
 
@@ -153,14 +162,17 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
                     'A1 Padel',
                     'Más de 100 canales HD',
                     'Contenido 4K disponible',
-                    'Sin permanencia'
+                    'Máxima flexibilidad'
                   ]
                 })}
                 className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 Lo quiero
               </button>
-              <button className="text-white border border-white/30 px-8 py-3 rounded-xl hover:bg-white/10 transition-colors">
+              <button 
+                onClick={scrollToParticulares}
+                className="text-white border border-white/30 px-8 py-3 rounded-xl hover:bg-white/10 transition-colors"
+              >
                 Ver otros planes
               </button>
             </div>
@@ -184,11 +196,72 @@ const TVSection: React.FC<TVSectionProps> = ({ onContractPlan }) => {
           <p className="text-white/80 text-lg mb-4">
             ¿Necesitas una solución personalizada para tu empresa?
           </p>
-          <button className="text-white border border-white/30 px-6 py-3 rounded-xl hover:bg-white/10 transition-colors">
+          <button 
+            onClick={() => setShowContactModal(true)}
+            className="text-white border border-white/30 px-6 py-3 rounded-xl hover:bg-white/10 transition-colors"
+          >
             Contactar con Ventas Empresariales
           </button>
         </div>
       </div>
+
+      {/* Contact Modal */}
+      {showContactModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-semibold text-gray-900">Contactar con Ventas Empresariales</h3>
+              <button 
+                onClick={() => setShowContactModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="text-center">
+                <p className="text-gray-600 mb-6">
+                  Nuestro equipo de ventas empresariales está listo para ayudarte con una solución personalizada.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <a 
+                  href="tel:+34621192578" 
+                  className="flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  <Phone className="w-5 h-5 mr-2" />
+                  +34 621 192 578
+                </a>
+                
+                <a 
+                  href="https://wa.me/34621192578?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20los%20servicios%20de%20TV%20empresarial%20de%20Arista.%20¿Podrían%20proporcionarme%20información%20detallada?" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  💬 WhatsApp
+                </a>
+                
+                <a 
+                  href="mailto:info@aristamovil.com?subject=Consulta%20TV%20Empresarial&body=Hola,%0A%0AMe%20interesa%20conocer%20más%20sobre%20el%20paquete%20deportivo%20completo%20para%20empresas.%20¿Podrían%20contactarme%20para%20más%20información?%0A%0AGracias." 
+                  className="flex items-center justify-center border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  <Mail className="w-5 h-5 mr-2" />
+                  info@aristamovil.com
+                </a>
+              </div>
+              
+              <div className="text-center text-sm text-gray-500">
+                <p>Horario de atención:</p>
+                <p>Lunes a Viernes 8:00 - 20:00</p>
+                <p>Sábados 9:00 - 14:00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

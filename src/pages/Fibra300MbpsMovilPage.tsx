@@ -3,6 +3,7 @@ import { ArrowLeft, Wifi, Smartphone, CheckCircle, Shield, Clock, Users, Star, C
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AristaLogo from '../components/AristaLogo';
+import SimpleContractForm from '../components/SimpleContractForm';
 
 interface Fibra300MbpsMovilPageProps {
   onBack?: () => void;
@@ -10,6 +11,7 @@ interface Fibra300MbpsMovilPageProps {
 
 const Fibra300MbpsMovilPage: React.FC<Fibra300MbpsMovilPageProps> = ({ onBack }) => {
   const [selectedMovilGB, setSelectedMovilGB] = useState('40gb');
+  const [showContractForm, setShowContractForm] = useState(false);
   
   const movilOptions = [
     { id: '40gb', name: '40 GB', price: 2.90, description: 'Voz ilimitada' },
@@ -23,8 +25,19 @@ const Fibra300MbpsMovilPage: React.FC<Fibra300MbpsMovilPageProps> = ({ onBack })
   const getTotalPrice = () => getBasePrice() + getMovilPrice();
   
   const handleContract = () => {
-    // Lógica para contratar el plan
-    console.log('Contratando plan Fibra 300 Mbps + Móvil', selectedMovilGB);
+    setShowContractForm(true);
+  };
+
+  const currentPlan = {
+    id: 'fibra-300-movil',
+    name: `Fibra 300 Mbps + Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name}`,
+    price: getTotalPrice(),
+    features: [
+      'Fibra óptica 300 Mbps',
+      `Móvil ${movilOptions.find(opt => opt.id === selectedMovilGB)?.name} con voz ilimitada`,
+      'Instalación gratuita',
+      'Router WiFi incluido'
+    ]
   };
 
   const handleScrollToParticularesWithTab = (tab: string) => {
@@ -190,7 +203,7 @@ const Fibra300MbpsMovilPage: React.FC<Fibra300MbpsMovilPageProps> = ({ onBack })
               'Router WiFi 6 de última generación',
               'Instalación y configuración gratuita',
               'Soporte técnico 24/7',
-              'Sin permanencia',
+              'Máxima flexibilidad',
               'Portabilidad gratuita'
             ].map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">
@@ -243,6 +256,14 @@ const Fibra300MbpsMovilPage: React.FC<Fibra300MbpsMovilPageProps> = ({ onBack })
       </div>
 
       <Footer />
+      
+      {showContractForm && (
+        <SimpleContractForm 
+          isOpen={showContractForm}
+          onClose={() => setShowContractForm(false)}
+          plan={currentPlan}
+        />
+      )}
     </div>
   );
 };

@@ -73,13 +73,13 @@ app.post('/api/plan-request', async (req, res) => {
     
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.DESTINATION_EMAIL,
+      to: 'info@aristamovil.com',
       subject: subject,
       html: emailContent
     };
     
     await transporter.sendMail(mailOptions);
-    console.log('Email de solicitud de plan enviado correctamente a:', process.env.DESTINATION_EMAIL);
+    console.log('Email de solicitud de plan enviado correctamente a: info@aristamovil.com');
     res.status(200).json({ message: 'Solicitud de plan enviada correctamente' });
     
   } catch (error) {
@@ -99,7 +99,7 @@ app.post('/api/contact', async (req, res) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@aristamovil.com',
-      to: process.env.DESTINATION_EMAIL || 'info@aristamovil.com',
+      to: 'info@aristamovil.com',
       subject: `Nueva solicitud de información - ${service}`,
       html: `
         <h2>Nueva solicitud de información</h2>
@@ -122,6 +122,64 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// Endpoint para formulario simple de contratación
+app.post('/api/simple-contract', async (req, res) => {
+  try {
+    const { name, email, phone, address, city, postalCode, comments, acceptPrivacy, plan, timestamp } = req.body;
+    
+    if (!acceptPrivacy) {
+      return res.status(400).json({ error: 'Debe aceptar la política de privacidad' });
+    }
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER || 'noreply@aristamovil.com',
+      to: 'info@aristamovil.com',
+      subject: `Nueva solicitud de contratación - ${plan?.name || 'Plan seleccionado'} - ${name}`,
+      html: `
+        <h2>Nueva Solicitud de Contratación</h2>
+        <p><strong>Fecha:</strong> ${new Date(timestamp).toLocaleString('es-ES')}</p>
+        
+        <h3>PLAN SOLICITADO:</h3>
+        <p><strong>Nombre:</strong> ${plan?.name || 'No especificado'}</p>
+        <p><strong>Precio:</strong> ${plan?.price || 0}€/mes</p>
+        ${plan?.features && plan.features.length > 0 ? `
+        <p><strong>Características incluidas:</strong></p>
+        <ul>
+          ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+        </ul>
+        ` : ''}
+        
+        <h3>DATOS DEL CLIENTE:</h3>
+        <p><strong>Nombre:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Teléfono:</strong> ${phone}</p>
+        
+        <h3>DIRECCIÓN DE INSTALACIÓN:</h3>
+        <p><strong>Dirección:</strong> ${address}</p>
+        <p><strong>Ciudad:</strong> ${city}</p>
+        <p><strong>Código Postal:</strong> ${postalCode}</p>
+        
+        ${comments ? `
+        <h3>COMENTARIOS ADICIONALES:</h3>
+        <p>${comments}</p>
+        ` : ''}
+        
+        <hr>
+        <p><em>Enviado desde el formulario simple de contratación de Arista Móvil</em></p>
+        <p><em>El cliente ha aceptado la política de privacidad</em></p>
+        <p><em>Esta es una solicitud de información, no una contratación definitiva</em></p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Email de solicitud simple enviado correctamente a: info@aristamovil.com');
+    res.json({ success: true, message: 'Solicitud enviada correctamente' });
+  } catch (error) {
+    console.error('Error enviando solicitud simple:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
 // Endpoint para contratación
 app.post('/api/contract', async (req, res) => {
   try {
@@ -133,7 +191,7 @@ app.post('/api/contract', async (req, res) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@aristamovil.com',
-      to: process.env.DESTINATION_EMAIL || 'info@aristamovil.com',
+      to: 'info@aristamovil.com',
       subject: `Nueva contratación - ${plan?.name || 'Plan seleccionado'}`,
       html: `
         <h2>Nueva contratación de servicio</h2>
@@ -173,7 +231,10 @@ app.post('/api/contract', async (req, res) => {
 // Endpoint para consulta de cobertura
 app.post('/api/coverage', async (req, res) => {
   try {
-    const { formData, acceptPrivacy, source } = req.body;
+    // Manejar tanto el formato antiguo como el nuevo
+    const formData = req.body.formData || req.body;
+    const acceptPrivacy = req.body.acceptPrivacy !== undefined ? req.body.acceptPrivacy : formData.acceptPrivacy;
+    const source = req.body.source;
     
     if (!acceptPrivacy) {
       return res.status(400).json({ error: 'Debe aceptar la política de privacidad' });
@@ -181,20 +242,20 @@ app.post('/api/coverage', async (req, res) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER || 'noreply@aristamovil.com',
-      to: process.env.DESTINATION_EMAIL || 'info@aristamovil.com',
-      subject: `Consulta de cobertura${source ? ` (${source})` : ''} - ${formData.city}, ${formData.postalCode}`,
+      to: 'info@aristamovil.com',
+      subject: `Consulta de cobertura${source ? ` (${source})` : ''} - ${formData.city || 'N/A'}, ${formData.postalCode || 'N/A'}`,
       html: `
         <h2>Nueva consulta de cobertura${source ? ` desde ${source}` : ''}</h2>
         
         <h3>DATOS DEL CLIENTE:</h3>
-        <p><strong>Nombre:</strong> ${formData.name} ${formData.lastName}</p>
-        <p><strong>Email:</strong> ${formData.email}</p>
-        <p><strong>Teléfono:</strong> ${formData.phone}</p>
+        <p><strong>Nombre:</strong> ${formData.name || 'N/A'} ${formData.lastName || ''}</p>
+        <p><strong>Email:</strong> ${formData.email || 'N/A'}</p>
+        <p><strong>Teléfono:</strong> ${formData.phone || 'N/A'}</p>
         
         <h3>DIRECCIÓN A CONSULTAR:</h3>
-        <p><strong>Dirección:</strong> ${formData.address}</p>
-        <p><strong>Ciudad:</strong> ${formData.city}</p>
-        <p><strong>Código Postal:</strong> ${formData.postalCode}</p>
+        <p><strong>Dirección:</strong> ${formData.address || 'N/A'}</p>
+        <p><strong>Ciudad:</strong> ${formData.city || 'N/A'}</p>
+        <p><strong>Código Postal:</strong> ${formData.postalCode || 'N/A'}</p>
         
         <hr>
         <p><em>Enviado desde el formulario de consulta de cobertura de Arista Móvil</em></p>

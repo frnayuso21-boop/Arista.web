@@ -262,7 +262,7 @@ const MovilESIMPage: React.FC<MovilESIMPageProps> = ({ onBack }) => {
               'Hotspot móvil sin restricciones',
               'App Mi Arista con gestión eSIM',
               'Buzón de voz visual',
-              'Sin permanencia ni penalizaciones',
+              'Máxima flexibilidad sin penalizaciones',
               'Cambio de operador remoto',
               'Múltiples perfiles eSIM',
               'Máxima seguridad integrada',

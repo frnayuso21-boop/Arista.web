@@ -258,7 +258,16 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 const isRecommended = index === 1; // 600 Mbps es recomendado
                 
                 return (
-                  <div key={option.value} className={`relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300`}>
+                  <div 
+                    key={option.value} 
+                    className={`relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-opacity-80`}
+                    onClick={() => onViewPlanDetail({
+                      id: `fibra-${option.value}`,
+                      name: `Fibra ${option.label}`,
+                      price: option.price,
+                      features: ['Velocidad simétrica', 'Máxima flexibilidad', 'Instalación gratuita', 'Router WiFi 6 incluido']
+                    })}
+                  >
                     {isRecommended && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                         <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-xs font-bold shadow-lg">
@@ -281,7 +290,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </li>
                       <li className="flex items-center text-sm text-gray-600">
                         <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        Sin permanencia
+                        Máxima flexibilidad
                       </li>
                       <li className="flex items-center text-sm text-gray-600">
                         <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -293,12 +302,15 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </li>
                     </ul>
                     <button
-                      onClick={() => onContractPlan({
-                        id: `fibra-${option.value}`,
-                        name: `Fibra ${option.label}`,
-                        price: option.price,
-                        features: ['Velocidad simétrica', 'Sin permanencia', 'Instalación gratuita', 'Router WiFi 6 incluido']
-                      })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onContractPlan({
+                          id: `fibra-${option.value}`,
+                          name: `Fibra ${option.label}`,
+                          price: option.price,
+                          features: ['Velocidad simétrica', 'Máxima flexibilidad', 'Instalación gratuita', 'Router WiFi 6 incluido']
+                        });
+                      }}
                       className={`w-full bg-gradient-to-r ${colorScheme.button} text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg`}
                     >
                       Lo quiero
@@ -312,7 +324,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
           {activeTab === 'fibra-movil' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Fibra 300 Mbps + Móvil */}
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
+                onClick={() => onViewPlanDetail({
+                  id: 'fibra-movil-300',
+                  name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
+                  price: getPrice300(),
+                  features: [
+                    '300 Mbps simétrica', 
+                    `${selectedData300} GB móvil`, 
+                    'Llamadas ilimitadas', 
+                    'Router WiFi 6 incluido',
+                    ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
+                  ]
+                })}
+              >
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wifi className="w-8 h-8 text-white" />
@@ -344,6 +370,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedData300}
                     onChange={(e) => setSelectedData300(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     {dataOptions300.map((option) => (
@@ -361,6 +388,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       <select
                         value={additionalLineData300}
                         onChange={(e) => setAdditionalLineData300(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
@@ -380,7 +408,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => setAdditionalLines300(Math.max(0, additionalLines300 - 1))}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines300(Math.max(0, additionalLines300 - 1));
+                          }}
                           disabled={additionalLines300 === 0}
                           className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
                         >
@@ -388,7 +419,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         </button>
                         <span className="w-8 text-center font-medium">{additionalLines300}</span>
                         <button
-                          onClick={() => setAdditionalLines300(additionalLines300 + 1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines300(additionalLines300 + 1);
+                          }}
                           className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center font-bold"
                         >
                           +
@@ -404,18 +438,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 )}
 
                 <button
-                  onClick={() => onContractPlan({
-                    id: 'fibra-movil-300',
-                    name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
-                    price: getPrice300(),
-                    features: [
-                      '300 Mbps simétrica', 
-                      `${selectedData300} GB móvil`, 
-                      'Llamadas ilimitadas', 
-                      'Router WiFi 6 incluido',
-                      ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: 'fibra-movil-300',
+                      name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
+                      price: getPrice300(),
+                      features: [
+                        '300 Mbps simétrica', 
+                        `${selectedData300} GB móvil`, 
+                        'Llamadas ilimitadas', 
+                        'Router WiFi 6 incluido',
+                        ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
@@ -423,7 +460,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
               </div>
 
               {/* Fibra 600 Mbps + Móvil */}
-              <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div 
+                className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300"
+                onClick={() => onViewPlanDetail({
+                  id: 'fibra-movil-600',
+                  name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
+                  price: getPrice600(),
+                  features: [
+                    '600 Mbps simétrica', 
+                    `${selectedData600} GB móvil`, 
+                    'Llamadas ilimitadas', 
+                    'Router WiFi 6 Pro incluido',
+                    ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
+                  ]
+                })}
+              >
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-xs font-bold shadow-lg">
                     RECOMENDADO
@@ -460,6 +511,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedData600}
                     onChange={(e) => setSelectedData600(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
                     {dataOptions600.map((option) => (
@@ -477,6 +529,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       <select
                         value={additionalLineData600}
                         onChange={(e) => setAdditionalLineData600(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
@@ -496,7 +549,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => setAdditionalLines600(Math.max(0, additionalLines600 - 1))}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines600(Math.max(0, additionalLines600 - 1));
+                          }}
                           disabled={additionalLines600 === 0}
                           className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
                         >
@@ -504,7 +560,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         </button>
                         <span className="w-8 text-center font-medium">{additionalLines600}</span>
                         <button
-                          onClick={() => setAdditionalLines600(additionalLines600 + 1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines600(additionalLines600 + 1);
+                          }}
                           className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold"
                         >
                           +
@@ -520,26 +579,44 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 )}
 
                 <button
-                  onClick={() => onContractPlan({
-                    id: 'fibra-movil-600',
-                    name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
-                    price: getPrice600(),
-                    features: [
-                      '600 Mbps simétrica', 
-                      `${selectedData600} GB móvil`, 
-                      'Llamadas ilimitadas', 
-                      'Router WiFi 6 Pro incluido',
-                      ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: 'fibra-movil-600',
+                      name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
+                      price: getPrice600(),
+                      features: [
+                        '600 Mbps simétrica', 
+                        `${selectedData600} GB móvil`, 
+                        'Llamadas ilimitadas', 
+                        'Router WiFi 6 Pro incluido',
+                        ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
                 </button>
               </div>
 
-              {/* Fibra 1000 Mbps + Móvil */}
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all duration-300">
+              {/* Fibra 1 Gbps + Móvil */}
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-green-300"
+                onClick={() => onViewPlanDetail({
+                  id: 'fibra-movil-1gb',
+                  name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
+                  price: getPrice1000(),
+                  features: [
+                    '1 Gbps simétrica', 
+                    `${selectedData1000} GB móvil`, 
+                    'Llamadas ilimitadas', 
+                    'Router WiFi 6 Pro incluido',
+                    'Instalación gratuita',
+                    ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
+                  ]
+                })}
+              >
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wifi className="w-8 h-8 text-white" />
@@ -571,6 +648,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedData1000}
                     onChange={(e) => setSelectedData1000(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   >
                     {dataOptions1000.map((option) => (
@@ -588,6 +666,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       <select
                         value={additionalLineData1000}
                         onChange={(e) => setAdditionalLineData1000(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
@@ -607,7 +686,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => setAdditionalLines1000(Math.max(0, additionalLines1000 - 1))}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines1000(Math.max(0, additionalLines1000 - 1));
+                          }}
                           disabled={additionalLines1000 === 0}
                           className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
                         >
@@ -615,7 +697,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         </button>
                         <span className="w-8 text-center font-medium">{additionalLines1000}</span>
                         <button
-                          onClick={() => setAdditionalLines1000(additionalLines1000 + 1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAdditionalLines1000(additionalLines1000 + 1);
+                          }}
                           className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center font-bold"
                         >
                           +
@@ -631,18 +716,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 )}
 
                 <button
-                  onClick={() => onContractPlan({
-                    id: 'fibra-movil-1000',
-                    name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
-                    price: getPrice1000(),
-                    features: [
-                      '1 Gbps simétrica', 
-                      `${selectedData1000} GB móvil`, 
-                      'Llamadas ilimitadas', 
-                      'Router WiFi 6E Premium',
-                      ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: 'fibra-movil-1000',
+                      name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
+                      price: getPrice1000(),
+                      features: [
+                        '1 Gbps simétrica', 
+                        `${selectedData1000} GB móvil`, 
+                        'Llamadas ilimitadas', 
+                        'Router WiFi 6E Premium',
+                        ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
@@ -653,7 +741,20 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
 
           {activeTab === 'movil' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
+                onClick={() => onViewPlanDetail({
+                  id: `juntos-${selectedJuntosData}`,
+                  name: 'Juntos',
+                  price: getSelectedJuntosPrice(),
+                  features: [
+                    juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
+                    'Llamadas ilimitadas',
+                    'SMS ilimitados',
+                    '5G incluido'
+                  ]
+                })}
+              >
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Smartphone className="w-8 h-8 text-white" />
@@ -682,24 +783,41 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </select>
                 </div>
                 <button
-                  onClick={() => onContractPlan({
-                    id: `juntos-${selectedJuntosData}`,
-                    name: 'Juntos',
-                    price: getSelectedJuntosPrice(),
-                    features: [
-                      juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
-                      'Llamadas ilimitadas',
-                      'SMS ilimitados',
-                      '5G incluido'
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: `juntos-${selectedJuntosData}`,
+                      name: 'Juntos',
+                      price: getSelectedJuntosPrice(),
+                      features: [
+                        juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
+                        'Llamadas ilimitadas',
+                        'SMS ilimitados',
+                        '5G incluido'
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
                 </button>
               </div>
 
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-600"
+                onClick={() => onViewPlanDetail({
+                  id: `compartidos-${selectedCompartidosData}`,
+                  name: 'Compartidos',
+                  price: getSelectedCompartidosPrice(),
+                  features: [
+                    compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.label || '50 GB',
+                    'Llamadas ilimitadas',
+                    'SMS ilimitados',
+                    '5G incluido',
+                    'Datos compartidos entre líneas'
+                  ]
+                })}
+              >
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Smartphone className="w-8 h-8 text-white" />
@@ -729,25 +847,42 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </select>
                 </div>
                 <button
-                  onClick={() => onContractPlan({
-                    id: `compartidos-${selectedCompartidosData}`,
-                    name: 'Compartidos',
-                    price: getSelectedCompartidosPrice(),
-                    features: [
-                      compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.label || '50 GB',
-                      'Llamadas ilimitadas',
-                      'SMS ilimitados',
-                      '5G incluido',
-                      'Datos compartidos entre líneas'
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: `compartidos-${selectedCompartidosData}`,
+                      name: 'Compartidos',
+                      price: getSelectedCompartidosPrice(),
+                      features: [
+                        compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.label || '50 GB',
+                        'Llamadas ilimitadas',
+                        'SMS ilimitados',
+                        '5G incluido',
+                        'Datos compartidos entre líneas'
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
                 </button>
               </div>
 
-              <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-pink-500 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div 
+                className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-pink-500 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-pink-600"
+                onClick={() => onViewPlanDetail({
+                  id: `esim-${selectedEsimPlan}`,
+                  name: 'eSIM',
+                  price: getSelectedEsimPrice(),
+                  features: [
+                    esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
+                    'Activación instantánea',
+                    'Sin tarjeta física',
+                    '5G incluido',
+                    'Roaming UE incluido'
+                  ]
+                })}
+              >
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-1 rounded-full text-xs font-medium shadow-lg">
                     eSIM Digital
@@ -782,18 +917,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </select>
                 </div>
                 <button
-                  onClick={() => onContractPlan({
-                    id: `esim-${selectedEsimPlan}`,
-                    name: 'eSIM',
-                    price: getSelectedEsimPrice(),
-                    features: [
-                      esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
-                      'Activación instantánea',
-                      'Sin tarjeta física',
-                      '5G incluido',
-                      'Roaming UE incluido'
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: `esim-${selectedEsimPlan}`,
+                      name: 'eSIM',
+                      price: getSelectedEsimPrice(),
+                      features: [
+                        esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
+                        'Activación instantánea',
+                        'Sin tarjeta física',
+                        '5G incluido',
+                        'Roaming UE incluido'
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
@@ -804,7 +942,64 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
 
           {activeTab === 'tv' && (
             <div className="max-w-lg mx-auto">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 border-2 border-gradient-to-r from-yellow-500 to-orange-500 shadow-xl relative">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 border-2 border-gradient-to-r from-yellow-500 to-orange-500 shadow-xl relative cursor-pointer hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('data:image/svg+xml;base64,${btoa(`
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+                      <defs>
+                        <linearGradient id="grass" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#2d5016;stop-opacity:1" />
+                          <stop offset="50%" style="stop-color:#4a7c59;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#2d5016;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="stands" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#1a365d;stop-opacity:1" />
+                          <stop offset="50%" style="stop-color:#2d3748;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#1a202c;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <!-- Stadium Bowl -->
+                      <ellipse cx="400" cy="500" rx="380" ry="80" fill="url(#stands)" opacity="0.3"/>
+                      <ellipse cx="400" cy="480" rx="350" ry="70" fill="url(#stands)" opacity="0.4"/>
+                      <ellipse cx="400" cy="460" rx="320" ry="60" fill="url(#stands)" opacity="0.5"/>
+                      <!-- Field -->
+                      <ellipse cx="400" cy="440" rx="280" ry="50" fill="url(#grass)" opacity="0.6"/>
+                      <!-- Field Lines -->
+                      <ellipse cx="400" cy="440" rx="280" ry="50" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+                      <ellipse cx="400" cy="440" rx="140" ry="25" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+                      <line x1="400" y1="415" x2="400" y2="465" stroke="white" stroke-width="1" opacity="0.3"/>
+                      <!-- Champions League Stars -->
+                      <g opacity="0.2">
+                        <polygon points="200,150 205,165 220,165 208,175 213,190 200,180 187,190 192,175 180,165 195,165" fill="#FFD700"/>
+                        <polygon points="400,120 405,135 420,135 408,145 413,160 400,150 387,160 392,145 380,135 395,135" fill="#FFD700"/>
+                        <polygon points="600,150 605,165 620,165 608,175 613,190 600,180 587,190 592,175 580,165 595,165" fill="#FFD700"/>
+                      </g>
+                      <!-- Floodlights -->
+                      <rect x="100" y="200" width="8" height="120" fill="#4a5568" opacity="0.4"/>
+                      <rect x="692" y="200" width="8" height="120" fill="#4a5568" opacity="0.4"/>
+                      <circle cx="104" cy="200" r="12" fill="#ffd700" opacity="0.3"/>
+                      <circle cx="696" cy="200" r="12" fill="#ffd700" opacity="0.3"/>
+                    </svg>
+                  `)}')`
+                }}
+                onClick={() => onViewPlanDetail({
+                  id: 'tv-deportivo',
+                  name: 'Paquete Deportivo Completo',
+                  price: 350,
+                  features: [
+                    'La Liga',
+                    'UEFA Champions League',
+                    'UEFA Europa League',
+                    'Premier League',
+                    'Fórmula 1',
+                    'Moto GP',
+                    'A1 Padel',
+                    'Más de 100 canales HD',
+                    'Contenido 4K disponible'
+                  ]
+                })}
+              >
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold flex items-center shadow-lg">
                     <Star className="w-4 h-4 mr-2" />
@@ -844,23 +1039,26 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </div>
                 </div>
                 <button
-                  onClick={() => onContractPlan({
-                    id: 'tv-deportivo',
-                    name: 'Paquete Deportivo Completo',
-                    price: 350,
-                    features: [
-                      'La Liga',
-                      'UEFA Champions League',
-                      'UEFA Europa League',
-                      'Premier League',
-                      'Fórmula 1',
-                      'Moto GP',
-                      'A1 Padel',
-                      'Más de 100 canales HD',
-                      'Contenido 4K disponible',
-                      'Sin permanencia'
-                    ]
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: 'tv-deportivo',
+                      name: 'Paquete Deportivo Completo',
+                      price: 350,
+                      features: [
+                        'La Liga',
+                        'UEFA Champions League',
+                        'UEFA Europa League',
+                        'Premier League',
+                        'Fórmula 1',
+                        'Moto GP',
+                        'A1 Padel',
+                        'Más de 100 canales HD',
+                        'Contenido 4K disponible',
+                        'Máxima flexibilidad'
+                      ]
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
@@ -871,7 +1069,15 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
 
           {activeTab === 'fibra-movil-tv' && (
             <div className="max-w-xl mx-auto">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-gradient-to-r from-purple-500 to-pink-500 shadow-lg relative">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-gradient-to-r from-purple-500 to-pink-500 shadow-lg relative cursor-pointer hover:shadow-2xl transition-all duration-300"
+                onClick={() => onViewPlanDetail({
+                  id: 'fibra-movil-tv-configurado',
+                  name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
+                  price: getTvPlanPrice(),
+                  features: getTvPlanFeatures()
+                })}
+              >
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-xs font-bold flex items-center shadow-lg">
                     <Star className="w-3 h-3 mr-1" />
@@ -962,15 +1168,18 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 </div>
 
                 <button
-                  onClick={() => onContractPlan({
-                    id: 'fibra-movil-tv-configurado',
-                    name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
-                    price: getTvPlanPrice(),
-                    features: getTvPlanFeatures()
-                  })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContractPlan({
+                      id: 'fibra-movil-tv-configurado',
+                      name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
+                      price: getTvPlanPrice(),
+                      features: getTvPlanFeatures()
+                    });
+                  }}
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg text-lg"
                 >
-                  Lo quiero - {getTvPlanPrice().toFixed(2)}€/mes
+                  Lo quiero
                 </button>
               </div>
             </div>
