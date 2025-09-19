@@ -28,6 +28,12 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
   const [selectedJuntosData, setSelectedJuntosData] = useState('40');
   const [selectedCompartidosData, setSelectedCompartidosData] = useState('60');
   const [selectedEsimPlan, setSelectedEsimPlan] = useState('voz-15gb');
+  const [additionalJuntosLines, setAdditionalJuntosLines] = useState(0);
+  const [additionalCompartidosLines, setAdditionalCompartidosLines] = useState(0);
+  const [additionalJuntosLineData, setAdditionalJuntosLineData] = useState('40');
+  const [additionalCompartidosLineData, setAdditionalCompartidosLineData] = useState('60');
+  const [additionalEsimLines, setAdditionalEsimLines] = useState(0);
+  const [additionalEsimLineData, setAdditionalEsimLineData] = useState('voz-15gb');
   const [showContactForm, setShowContactForm] = useState(false);
   const [selectedTvPlan, setSelectedTvPlan] = useState('600-75gb');
   const [selectedTvAdditionalLines, setSelectedTvAdditionalLines] = useState('0');
@@ -186,16 +192,36 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
     return basePrice + additionalLinesPrice;
   };
 
+  const getMobileAdditionalLinePrice = (dataAmount: string) => {
+    if (dataAmount === '40') return 5.90;
+    if (dataAmount === '60') return 7.90;
+    if (dataAmount === '100') return 8.90;
+    if (dataAmount === '200') return 12.90;
+    if (dataAmount === '400') return 19.90;
+    return 5.90; // default
+  };
+
   const getSelectedJuntosPrice = () => {
-    return juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.price || 0;
+    const basePrice = juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.price || 0;
+    const additionalLinesPrice = additionalJuntosLines * getMobileAdditionalLinePrice(additionalJuntosLineData);
+    return basePrice + additionalLinesPrice;
   };
 
   const getSelectedCompartidosPrice = () => {
-    return compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.price || 0;
+    const basePrice = compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.price || 0;
+    const additionalLinesPrice = additionalCompartidosLines * getMobileAdditionalLinePrice(additionalCompartidosLineData);
+    return basePrice + additionalLinesPrice;
+  };
+
+  const getEsimAdditionalLinePrice = (planValue: string) => {
+    const basePlan = esimOptions.find(opt => opt.value === planValue);
+    return basePlan ? basePlan.price * 0.8 : 4.76; // 20% descuento en líneas adicionales
   };
 
   const getSelectedEsimPrice = () => {
-    return esimOptions.find(opt => opt.value === selectedEsimPlan)?.price || 0;
+    const basePrice = esimOptions.find(opt => opt.value === selectedEsimPlan)?.price || 0;
+    const additionalLinesPrice = additionalEsimLines * getEsimAdditionalLinePrice(additionalEsimLineData);
+    return basePrice + additionalLinesPrice;
   };
 
   return (
@@ -371,7 +397,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     value={selectedData300}
                     onChange={(e) => setSelectedData300(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
                   >
                     {dataOptions300.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -389,7 +417,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         value={additionalLineData300}
                         onChange={(e) => setAdditionalLineData300(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm touch-manipulation"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
                         <option value="80">80 GB - 7,90€/mes</option>
@@ -412,8 +442,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines300(Math.max(0, additionalLines300 - 1));
                           }}
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
                           disabled={additionalLines300 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
                         >
                           -
                         </button>
@@ -423,7 +455,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines300(additionalLines300 + 1);
                           }}
-                          className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center font-bold"
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
+                          className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center font-bold touch-manipulation"
                         >
                           +
                         </button>
@@ -512,7 +546,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     value={selectedData600}
                     onChange={(e) => setSelectedData600(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent touch-manipulation"
                   >
                     {dataOptions600.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -530,7 +566,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         value={additionalLineData600}
                         onChange={(e) => setAdditionalLineData600(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm touch-manipulation"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
                         <option value="80">80 GB - 7,90€/mes</option>
@@ -553,8 +591,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines600(Math.max(0, additionalLines600 - 1));
                           }}
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
                           disabled={additionalLines600 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
                         >
                           -
                         </button>
@@ -564,7 +604,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines600(additionalLines600 + 1);
                           }}
-                          className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold"
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
+                          className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold touch-manipulation"
                         >
                           +
                         </button>
@@ -649,7 +691,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     value={selectedData1000}
                     onChange={(e) => setSelectedData1000(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent touch-manipulation"
                   >
                     {dataOptions1000.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -667,7 +711,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         value={additionalLineData1000}
                         onChange={(e) => setAdditionalLineData1000(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm touch-manipulation"
                       >
                         <option value="40">40 GB - 5,90€/mes</option>
                         <option value="80">80 GB - 7,90€/mes</option>
@@ -690,8 +736,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines1000(Math.max(0, additionalLines1000 - 1));
                           }}
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
                           disabled={additionalLines1000 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
                         >
                           -
                         </button>
@@ -701,7 +749,9 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                             e.stopPropagation();
                             setAdditionalLines1000(additionalLines1000 + 1);
                           }}
-                          className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center font-bold"
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchEnd={(e) => e.stopPropagation()}
+                          className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center font-bold touch-manipulation"
                         >
                           +
                         </button>
@@ -751,7 +801,8 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
                     'Llamadas ilimitadas',
                     'SMS ilimitados',
-                    '5G incluido'
+                    '5G incluido',
+                    ...(additionalJuntosLines > 0 ? [`${additionalJuntosLines} línea${additionalJuntosLines > 1 ? 's' : ''} adicional${additionalJuntosLines > 1 ? 'es' : ''} con ${juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} cada una`] : [])
                   ]
                 })}
               >
@@ -773,7 +824,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedJuntosData}
                     onChange={(e) => setSelectedJuntosData(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
                   >
                     {juntosDataOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -781,6 +835,62 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </option>
                     ))}
                   </select>
+                </div>
+                
+                {/* Líneas adicionales */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalJuntosLines > 0) {
+                          setAdditionalJuntosLines(additionalJuntosLines - 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalJuntosLines}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalJuntosLines < 4) {
+                          setAdditionalJuntosLines(additionalJuntosLines + 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {additionalJuntosLines > 0 && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Datos por línea adicional:</label>
+                      <select
+                        value={additionalJuntosLineData}
+                        onChange={(e) => setAdditionalJuntosLineData(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
+                      >
+                        {juntosDataOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional incluye {juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} y llamadas ilimitadas por {getMobileAdditionalLinePrice(additionalJuntosLineData).toFixed(2)}€/mes
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={(e) => {
@@ -793,7 +903,8 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
                         'Llamadas ilimitadas',
                         'SMS ilimitados',
-                        '5G incluido'
+                        '5G incluido',
+                        ...(additionalJuntosLines > 0 ? [`${additionalJuntosLines} línea${additionalJuntosLines > 1 ? 's' : ''} adicional${additionalJuntosLines > 1 ? 'es' : ''} con ${juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} cada una`] : [])
                       ]
                     });
                   }}
@@ -814,7 +925,8 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     'Llamadas ilimitadas',
                     'SMS ilimitados',
                     '5G incluido',
-                    'Datos compartidos entre líneas'
+                    'Datos compartidos entre líneas',
+                    ...(additionalCompartidosLines > 0 ? [`${additionalCompartidosLines} línea${additionalCompartidosLines > 1 ? 's' : ''} adicional${additionalCompartidosLines > 1 ? 'es' : ''} con ${compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} cada una`] : [])
                   ]
                 })}
               >
@@ -837,7 +949,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedCompartidosData}
                     onChange={(e) => setSelectedCompartidosData(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
                   >
                     {compartidosDataOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -845,6 +960,62 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </option>
                     ))}
                   </select>
+                </div>
+                
+                {/* Líneas adicionales */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalCompartidosLines > 0) {
+                          setAdditionalCompartidosLines(additionalCompartidosLines - 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalCompartidosLines}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalCompartidosLines < 4) {
+                          setAdditionalCompartidosLines(additionalCompartidosLines + 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {additionalCompartidosLines > 0 && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Datos por línea adicional:</label>
+                      <select
+                        value={additionalCompartidosLineData}
+                        onChange={(e) => setAdditionalCompartidosLineData(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
+                      >
+                        {compartidosDataOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional incluye {compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} compartidos y llamadas ilimitadas por {getMobileAdditionalLinePrice(additionalCompartidosLineData).toFixed(2)}€/mes
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={(e) => {
@@ -858,7 +1029,8 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         'Llamadas ilimitadas',
                         'SMS ilimitados',
                         '5G incluido',
-                        'Datos compartidos entre líneas'
+                        'Datos compartidos entre líneas',
+                        ...(additionalCompartidosLines > 0 ? [`${additionalCompartidosLines} línea${additionalCompartidosLines > 1 ? 's' : ''} adicional${additionalCompartidosLines > 1 ? 'es' : ''} con ${compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} cada una`] : [])
                       ]
                     });
                   }}
@@ -876,6 +1048,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   price: getSelectedEsimPrice(),
                   features: [
                     esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
+                    ...(additionalEsimLines > 0 ? [`${additionalEsimLines} línea${additionalEsimLines > 1 ? 's' : ''} adicional${additionalEsimLines > 1 ? 'es' : ''} eSIM (${esimOptions.find(opt => opt.value === additionalEsimLineData)?.label})`] : []),
                     'Activación instantánea',
                     'Sin tarjeta física',
                     '5G incluido',
@@ -907,7 +1080,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedEsimPlan}
                     onChange={(e) => setSelectedEsimPlan(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 touch-manipulation"
                   >
                     {esimOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -915,6 +1091,62 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       </option>
                     ))}
                   </select>
+                </div>
+                
+                {/* Líneas adicionales eSIM */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales eSIM:</label>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalEsimLines > 0) {
+                          setAdditionalEsimLines(additionalEsimLines - 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalEsimLines}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (additionalEsimLines < 4) {
+                          setAdditionalEsimLines(additionalEsimLines + 1);
+                        }
+                      }}
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                      className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {additionalEsimLines > 0 && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Plan para líneas adicionales:</label>
+                      <select
+                        value={additionalEsimLineData}
+                        onChange={(e) => setAdditionalEsimLineData(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-pink-500 focus:border-pink-500 touch-manipulation"
+                      >
+                        {esimOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label} - {option.price}€/mes
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cada línea adicional eSIM: {esimOptions.find(opt => opt.value === additionalEsimLineData)?.label} por {getEsimAdditionalLinePrice(additionalEsimLineData).toFixed(2)}€/mes (20% descuento)
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <button
                   onClick={(e) => {
@@ -925,6 +1157,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                       price: getSelectedEsimPrice(),
                       features: [
                         esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
+                        ...(additionalEsimLines > 0 ? [`${additionalEsimLines} línea${additionalEsimLines > 1 ? 's' : ''} adicional${additionalEsimLines > 1 ? 'es' : ''} eSIM (${esimOptions.find(opt => opt.value === additionalEsimLineData)?.label})`] : []),
                         'Activación instantánea',
                         'Sin tarjeta física',
                         '5G incluido',
@@ -1098,7 +1331,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   <select
                     value={selectedTvPlan}
                     onChange={(e) => setSelectedTvPlan(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white touch-manipulation"
                   >
                     {tvPlanOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -1121,7 +1357,10 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                         setTvAdditionalLinesCount(1);
                       }
                     }}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                    onClick={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onTouchEnd={(e) => e.stopPropagation()}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white touch-manipulation"
                   >
                     {tvAdditionalLinesOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -1137,16 +1376,26 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     <label className="block text-sm font-medium text-gray-700 mb-2">Cantidad de líneas adicionales:</label>
                     <div className="flex items-center justify-center space-x-4">
                       <button
-                        onClick={() => setTvAdditionalLinesCount(Math.max(0, tvAdditionalLinesCount - 1))}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTvAdditionalLinesCount(Math.max(0, tvAdditionalLinesCount - 1));
+                        }}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
                         disabled={tvAdditionalLinesCount === 0}
-                        className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold"
+                        className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
                       >
                         -
                       </button>
                       <span className="w-12 text-center font-medium text-lg">{tvAdditionalLinesCount}</span>
                       <button
-                        onClick={() => setTvAdditionalLinesCount(tvAdditionalLinesCount + 1)}
-                        className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTvAdditionalLinesCount(tvAdditionalLinesCount + 1);
+                        }}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
+                        className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold touch-manipulation"
                       >
                         +
                       </button>

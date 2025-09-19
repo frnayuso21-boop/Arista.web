@@ -118,25 +118,25 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
       icon: Cloud,
       title: 'Cloud Computing',
       description: 'Servidores virtuales escalables',
-      link: '/cloud-services'
+      link: '#contacto'
     },
     {
       icon: Lock,
       title: 'Ciberseguridad',
       description: 'Protección avanzada contra amenazas',
-      link: '/cybersecurity'
+      link: '#contacto'
     },
     {
       icon: Monitor,
       title: 'Monitorización 24/7',
       description: 'Supervisión continua de tu red',
-      link: '/monitoring'
+      link: '#contacto'
     },
     {
       icon: Phone,
       title: 'Telefonía IP',
       description: 'Centralitas virtuales completas',
-      link: '/voip-services'
+      link: '#contacto'
     }
   ];
 
@@ -144,32 +144,32 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
     {
       name: 'Retail & Comercio',
       description: 'Soluciones para tiendas y centros comerciales',
-      link: '/retail-solutions'
+      link: '#contacto'
     },
     {
       name: 'Salud & Medicina',
       description: 'Conectividad segura para centros médicos',
-      link: '/healthcare-solutions'
+      link: '#contacto'
     },
     {
       name: 'Educación',
       description: 'Redes para colegios y universidades',
-      link: '/education-solutions'
+      link: '#contacto'
     },
     {
       name: 'Hostelería',
       description: 'WiFi y conectividad para hoteles y restaurantes',
-      link: '/hospitality-solutions'
+      link: '#contacto'
     },
     {
       name: 'Industria',
       description: 'Redes industriales y IoT',
-      link: '/industrial-solutions'
+      link: '#contacto'
     },
     {
       name: 'Oficinas',
       description: 'Conectividad completa para espacios de trabajo',
-      link: '/office-solutions'
+      link: '#contacto'
     }
   ];
 
@@ -457,126 +457,117 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {additionalServices.map((service, index) => (
-              <div
-                key={index}
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/15 hover:border-blue-400/50 transition-all duration-300 group"
-              >
-                <div className="text-blue-400 mb-4 group-hover:scale-110 transition-transform">
-                  <service.icon className="w-8 h-8" />
+            {additionalServices.map((service, index) => {
+              const IconComponent = service.icon;
+              return (
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                  <IconComponent className="w-12 h-12 text-blue-400 mb-4" />
+                  <h3 className="text-xl font-light text-white mb-2">{service.title}</h3>
+                  <p className="text-white/80 mb-4 font-light">{service.description}</p>
+                  <a 
+                    href={service.link}
+                    className="text-blue-400 hover:text-blue-300 font-light transition-colors"
+                  >
+                    Más información →
+                  </a>
                 </div>
-                <h3 className="text-lg font-light text-white mb-2">{service.title}</h3>
-                <p className="text-white/70 text-sm font-light">{service.description}</p>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Industries Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-thin text-white text-center mb-12">
+            Soluciones por Sector
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {industries.map((industry, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <h3 className="text-xl font-light text-white mb-2">{industry.name}</h3>
+                <p className="text-white/80 mb-4 font-light">{industry.description}</p>
+                <a 
+                  href={industry.link}
+                  className="text-blue-400 hover:text-blue-300 font-light transition-colors"
+                >
+                  Ver soluciones →
+                </a>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CRM Section */}
+      {/* CTA Section */}
       <section className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-              <h2 className="text-4xl font-thin text-white mb-4">
-                ¿Necesitas un CRM de gestión empresarial?
-              </h2>
-              <p className="text-xl font-light text-white max-w-4xl mx-auto">
-                Un CRM (Customer Relationship Management) es una herramienta esencial que centraliza y optimiza la gestión de relaciones con clientes, automatizando procesos comerciales y mejorando la eficiencia de tu equipo de ventas.
-              </p>
-            </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200">
-              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Users className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-thin text-gray-900 mb-3">Gestión de Clientes</h3>
-              <p className="font-light text-gray-600">Centraliza toda la información de tus clientes en un solo lugar</p>
-            </div>
-            
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200">
-              <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <BarChart3 className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-thin text-gray-900 mb-3">Análisis y Reportes</h3>
-              <p className="font-light text-gray-600">Obtén insights valiosos sobre tu rendimiento comercial</p>
-            </div>
-            
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200">
-              <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Target className="w-8 h-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-thin text-gray-900 mb-3">Seguimiento de Ventas</h3>
-              <p className="font-light text-gray-600">Rastrea oportunidades y cierra más ventas eficientemente</p>
-            </div>
-            
-            <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200">
-              <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Zap className="w-8 h-8 text-orange-600" />
-              </div>
-              <h3 className="text-xl font-thin text-gray-900 mb-3">Automatización</h3>
-              <p className="font-light text-gray-600">Automatiza tareas repetitivas y optimiza tu flujo de trabajo</p>
-            </div>
-          </div>
-          
-          <div className="text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-thin text-white mb-6">
+            ¿Listo para transformar tu empresa?
+          </h2>
+          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto font-light">
+            Nuestros expertos están listos para diseñar la solución perfecta para tu negocio.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={() => setShowCRMModal(true)}
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-light hover:bg-blue-700 transition-colors shadow-lg"
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-light"
             >
-              Lo quiero
+              Solicitar Consulta Gratuita
             </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contacto" className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20 text-center">
-            <h2 className="text-3xl font-thin text-white mb-4">
-              ¿Listo para transformar tu empresa?
-            </h2>
-            <p className="text-white/80 mb-8 max-w-2xl mx-auto font-light">
-              Nuestros expertos en telecomunicaciones empresariales están listos para diseñar la solución perfecta para tu negocio.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <a 
-                href="tel:+34621192578" 
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center font-light"
-              >
-                <Phone className="w-5 h-5 mr-2" />
-                +34 621 192 578
-              </a>
-              <a 
-                href="https://wa.me/34621192578?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20los%20servicios%20de%20Arista%20Empresas.%20¿Podrían%20proporcionarme%20información%20detallada?" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors inline-flex items-center justify-center font-light"
-              >
-                💬 WhatsApp
-              </a>
-              <a 
-                href="mailto:info@aristamovil.com?subject=Consulta%20Arista%20Empresas&body=Hola,%0A%0AMe%20interesa%20conocer%20más%20sobre%20los%20servicios%20empresariales%20de%20Arista.%20¿Podrían%20contactarme%20para%20más%20información?%0A%0AGracias." 
-                className="border border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-gray-900 transition-colors font-light"
-              >
-                info@aristamovil.com
-              </a>
-            </div>
-            
-            <p className="text-white/60 text-sm font-light">
-              Horario de atención: Lunes a Viernes 8:00 - 20:00 | Sábados 9:00 - 14:00
-            </p>
+            <a 
+              href="tel:+34621192578" 
+              className="border border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-gray-900 transition-colors font-light inline-block text-center"
+            >
+              📞 Llamar Ahora
+            </a>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black/30 backdrop-blur-sm border-t border-white/10 py-8">
+      <footer className="bg-black/30 backdrop-blur-sm border-t border-white/10 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-white/60">
-            <p className="font-light">&copy; 2024 Arista Business. Todos los derechos reservados.</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <img 
+                src="/Arista - Logotipo Final Positivo.png" 
+                alt="Arista" 
+                className="h-16 mb-4"
+              />
+              <p className="text-white/60 font-light">
+                Conectividad empresarial de nueva generación
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-light mb-4">Servicios</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-white/60 hover:text-white font-light transition-colors">Fibra Empresarial</a></li>
+                <li><a href="#" className="text-white/60 hover:text-white font-light transition-colors">Telefonía IP</a></li>
+                <li><a href="#" className="text-white/60 hover:text-white font-light transition-colors">Cloud Computing</a></li>
+                <li><a href="#" className="text-white/60 hover:text-white font-light transition-colors">Ciberseguridad</a></li>
+              </ul>
+            </div>
+            
+
+            
+            <div>
+              <h4 className="text-white font-light mb-4">Contacto</h4>
+              <ul className="space-y-2">
+                <li className="text-white/60 font-light">📞 621 192 578</li>
+                <li className="text-white/60 font-light">✉️ info@aristamovil.com</li>
+                <li className="text-white/60 font-light">📍 Alicante, España</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-white/10 mt-8 pt-8 text-center">
+            <p className="text-white/60 font-light">
+              © 2024 Arista Telecomunicaciones. Todos los derechos reservados.
+            </p>
           </div>
         </div>
       </footer>
@@ -585,16 +576,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
       {showCRMModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-thin text-gray-900">Solicitar CRM Empresarial</h3>
-              <button 
-                onClick={() => setShowCRMModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
+            <h3 className="text-2xl font-light text-gray-900 mb-6">Solicitar Consulta Gratuita</h3>
             <form onSubmit={(e) => {
               e.preventDefault();
               setShowCRMModal(false);
@@ -603,213 +585,42 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
             }}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Nombre completo *</label>
-                  <input 
-                    type="text" 
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tu nombre completo"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Email corporativo *</label>
-                  <input 
-                    type="email" 
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="tu@empresa.com"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Teléfono *</label>
-                  <input 
-                    type="tel" 
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+34 XXX XXX XXX"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
+                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Empresa *</label>
-                  <input 
-                    type="text" 
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nombre de tu empresa"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
+                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Número de empleados</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">Selecciona el tamaño de tu empresa</option>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Número de empleados</label>
+                  <select required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Seleccionar...</option>
                     <option value="1-10">1-10 empleados</option>
                     <option value="11-50">11-50 empleados</option>
                     <option value="51-200">51-200 empleados</option>
                     <option value="200+">Más de 200 empleados</option>
                   </select>
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Comentarios adicionales</label>
-                  <textarea 
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Cuéntanos más sobre tus necesidades de CRM..."
-                  ></textarea>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Servicios de interés</label>
+                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe qué servicios te interesan..."></textarea>
                 </div>
               </div>
-              
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setShowCRMModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-light"
-                >
-                  Cancelar
-                </button>
-                <button 
-                  type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-light"
-                >
+              <div className="flex gap-3 mt-6">
+                <button type="submit" className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-light">
                   Enviar solicitud
                 </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Consultoria Contact Modal */}
-      {showConsultoriaModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-thin text-gray-900">Solicitar Consultoría Empresarial</h3>
-              <button 
-                onClick={() => setShowConsultoriaModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target as HTMLFormElement);
-              const data = {
-                nombre: formData.get('nombre'),
-                email: formData.get('email'),
-                telefono: formData.get('telefono'),
-                empresa: formData.get('empresa'),
-                empleados: formData.get('empleados'),
-                presupuesto: formData.get('presupuesto'),
-                comentarios: formData.get('comentarios')
-              };
-              
-              // Simular envío de email
-              console.log('Enviando consultoría a info@aristamovil.com:', data);
-              
-              setShowConsultoriaModal(false);
-              setShowConsultoriaSuccessMessage(true);
-              setTimeout(() => setShowConsultoriaSuccessMessage(false), 5000);
-            }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Nombre completo *</label>
-                  <input 
-                    type="text" 
-                    name="nombre"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tu nombre completo"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Email corporativo *</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="tu@empresa.com"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Teléfono *</label>
-                  <input 
-                    type="tel" 
-                    name="telefono"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+34 XXX XXX XXX"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Empresa *</label>
-                  <input 
-                    type="text" 
-                    name="empresa"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nombre de tu empresa"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Número de empleados</label>
-                  <select name="empleados" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">Selecciona el tamaño de tu empresa</option>
-                    <option value="1-10">1-10 empleados</option>
-                    <option value="11-50">11-50 empleados</option>
-                    <option value="51-200">51-200 empleados</option>
-                    <option value="200+">Más de 200 empleados</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Presupuesto mensual aproximado</label>
-                  <select name="presupuesto" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">Selecciona tu rango de presupuesto</option>
-                    <option value="<500">Menos de 500€/mes</option>
-                    <option value="500-1000">500€ - 1.000€/mes</option>
-                    <option value="1000-2500">1.000€ - 2.500€/mes</option>
-                    <option value="2500-5000">2.500€ - 5.000€/mes</option>
-                    <option value=">5000">Más de 5.000€/mes</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Describe tus necesidades *</label>
-                  <textarea 
-                    name="comentarios"
-                    rows={4}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Cuéntanos qué servicios necesitas, cuáles son tus objetivos y cualquier información relevante para tu consultoría..."
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setShowConsultoriaModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-light"
-                >
+                <button type="button" onClick={() => setShowCRMModal(false)} className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors font-light">
                   Cancelar
-                </button>
-                <button 
-                  type="submit"
-                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-light"
-                >
-                  Enviar solicitud
                 </button>
               </div>
             </form>
@@ -819,139 +630,61 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
 
       {/* Success Message */}
       {showSuccessMessage && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm">
-          <div className="flex items-center">
-            <div className="bg-green-500 rounded-full p-1 mr-3">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-light text-sm">¡Solicitud enviada correctamente!</p>
-              <p className="font-light text-xs text-green-100 mt-1">Un agente de Arista Empresas se pondrá en contacto contigo para estudiar tu caso.</p>
-            </div>
-          </div>
+        <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+          <p className="font-light">¡Solicitud enviada correctamente! Te contactaremos pronto.</p>
         </div>
       )}
 
-      {/* Consultoria Success Message */}
-      {showConsultoriaSuccessMessage && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm">
-          <div className="flex items-center">
-            <div className="bg-green-500 rounded-full p-1 mr-3">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-light text-sm">¡Consultoría solicitada correctamente!</p>
-              <p className="font-light text-xs text-green-100 mt-1">Hemos enviado tu solicitud a info@aristamovil.com. Te contactaremos pronto.</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Plan Contact Modal */}
-      {showPlanModal && (
+      {/* Consultoria Contact Modal */}
+      {showConsultoriaModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-thin text-gray-900">Contratar {selectedPlan}</h3>
-              <button 
-                onClick={() => setShowPlanModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
+            <h3 className="text-2xl font-light text-gray-900 mb-6">Solicitar Consultoría</h3>
             <form onSubmit={(e) => {
               e.preventDefault();
-              const formData = new FormData(e.target as HTMLFormElement);
-              const data = {
-                plan: selectedPlan,
-                nombre: formData.get('nombre'),
-                email: formData.get('email'),
-                telefono: formData.get('telefono'),
-                empresa: formData.get('empresa'),
-                comentarios: formData.get('comentarios')
-              };
-              
-              console.log('Enviando contratación de plan a info@aristamovil.com:', data);
-              
-              setShowPlanModal(false);
-              setShowPlanSuccessMessage(true);
-              setTimeout(() => setShowPlanSuccessMessage(false), 5000);
+              setShowConsultoriaModal(false);
+              setShowConsultoriaSuccessMessage(true);
+              setTimeout(() => setShowConsultoriaSuccessMessage(false), 5000);
             }}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Nombre completo *</label>
-                  <input 
-                    type="text" 
-                    name="nombre"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tu nombre completo"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Email *</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="tu@email.com"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Teléfono *</label>
-                  <input 
-                    type="tel" 
-                    name="telefono"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+34 XXX XXX XXX"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
+                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Empresa *</label>
-                  <input 
-                    type="text" 
-                    name="empresa"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nombre de tu empresa"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
+                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Comentarios adicionales</label>
-                  <textarea 
-                    name="comentarios"
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Información adicional sobre tu solicitud..."
-                  ></textarea>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Tipo de consultoría</label>
+                  <select required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Seleccionar...</option>
+                    <option value="infraestructura">Infraestructura de red</option>
+                    <option value="ciberseguridad">Ciberseguridad</option>
+                    <option value="cloud">Migración a la nube</option>
+                    <option value="telefonia">Telefonía empresarial</option>
+                    <option value="general">Consultoría general</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Descripción del proyecto</label>
+                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tu proyecto o necesidades..."></textarea>
                 </div>
               </div>
-              
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setShowPlanModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-light"
-                >
-                  Cancelar
+              <div className="flex gap-3 mt-6">
+                <button type="submit" className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-light">
+                  Solicitar consultoría
                 </button>
-                <button 
-                  type="submit"
-                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-light"
-                >
-                  Enviar solicitud
+                <button type="button" onClick={() => setShowConsultoriaModal(false)} className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors font-light">
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -959,107 +692,56 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         </div>
       )}
 
-      {/* Office Service Contact Modal */}
-      {showOfficeModal && (
+      {/* Consultoria Success Message */}
+      {showConsultoriaSuccessMessage && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+          <p className="font-light">¡Solicitud de consultoría enviada! Nuestros expertos te contactarán pronto.</p>
+        </div>
+      )}
+
+      {/* Plan Contact Modal */}
+      {showPlanModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-thin text-gray-900">Contratar {selectedOfficeService}</h3>
-              <button 
-                onClick={() => setShowOfficeModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
+            <h3 className="text-2xl font-light text-gray-900 mb-6">Contratar Plan: {selectedPlan}</h3>
             <form onSubmit={(e) => {
               e.preventDefault();
-              const formData = new FormData(e.target as HTMLFormElement);
-              const data = {
-                servicio: selectedOfficeService,
-                nombre: formData.get('nombre'),
-                email: formData.get('email'),
-                telefono: formData.get('telefono'),
-                empresa: formData.get('empresa'),
-                comentarios: formData.get('comentarios')
-              };
-              
-              console.log('Enviando contratación de servicio de oficina a info@aristamovil.com:', data);
-              
-              setShowOfficeModal(false);
-              setShowOfficeSuccessMessage(true);
-              setTimeout(() => setShowOfficeSuccessMessage(false), 5000);
+              setShowPlanModal(false);
+              setShowPlanSuccessMessage(true);
+              setTimeout(() => setShowPlanSuccessMessage(false), 5000);
             }}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Nombre completo *</label>
-                  <input 
-                    type="text" 
-                    name="nombre"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tu nombre completo"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Email *</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="tu@email.com"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Teléfono *</label>
-                  <input 
-                    type="tel" 
-                    name="telefono"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+34 XXX XXX XXX"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
+                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Empresa *</label>
-                  <input 
-                    type="text" 
-                    name="empresa"
-                    required 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nombre de tu empresa"
-                  />
+                  <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
+                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
-                
                 <div>
-                  <label className="block text-sm font-light text-gray-700 mb-2">Comentarios adicionales</label>
-                  <textarea 
-                    name="comentarios"
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Información adicional sobre tu solicitud..."
-                  ></textarea>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Dirección de instalación</label>
+                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={2} placeholder="Dirección completa donde instalar el servicio..."></textarea>
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Comentarios adicionales</label>
+                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Cualquier información adicional..."></textarea>
                 </div>
               </div>
-              
-              <div className="flex gap-4 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setShowOfficeModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-light"
-                >
-                  Cancelar
+              <div className="flex gap-3 mt-6">
+                <button type="submit" className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-light">
+                  Contratar plan
                 </button>
-                <button 
-                  type="submit"
-                  className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-light"
-                >
-                  Enviar solicitud
+                <button type="button" onClick={() => setShowPlanModal(false)} className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors font-light">
+                  Cancelar
                 </button>
               </div>
             </form>
@@ -1069,35 +751,65 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
 
       {/* Plan Success Message */}
       {showPlanSuccessMessage && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm">
-          <div className="flex items-center">
-            <div className="bg-green-500 rounded-full p-1 mr-3">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-light text-sm">¡Solicitud de plan enviada!</p>
-              <p className="font-light text-xs text-green-100 mt-1">Hemos enviado tu solicitud a info@aristamovil.com. Te contactaremos pronto.</p>
-            </div>
+        <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+          <p className="font-light">¡Solicitud de contratación enviada! Te contactaremos para finalizar el proceso.</p>
+        </div>
+      )}
+
+      {/* Office Service Modal */}
+      {showOfficeModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-2xl font-light text-gray-900 mb-6">Contratar: {selectedOfficeService}</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setShowOfficeModal(false);
+              setShowOfficeSuccessMessage(true);
+              setTimeout(() => setShowOfficeSuccessMessage(false), 5000);
+            }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
+                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
+                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
+                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Número de líneas necesarias</label>
+                  <input type="number" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-light text-gray-700 mb-1">Comentarios adicionales</label>
+                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tus necesidades específicas..."></textarea>
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button type="submit" className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-light">
+                  Solicitar servicio
+                </button>
+                <button type="button" onClick={() => setShowOfficeModal(false)} className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors font-light">
+                  Cancelar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Office Service Success Message */}
+      {/* Office Success Message */}
       {showOfficeSuccessMessage && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm">
-          <div className="flex items-center">
-            <div className="bg-green-500 rounded-full p-1 mr-3">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-light text-sm">¡Solicitud de servicio enviada!</p>
-              <p className="font-light text-xs text-green-100 mt-1">Hemos enviado tu solicitud a info@aristamovil.com. Te contactaremos pronto.</p>
-            </div>
-          </div>
+        <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+          <p className="font-light">¡Solicitud enviada correctamente! Te contactaremos para configurar tu servicio.</p>
         </div>
       )}
     </div>

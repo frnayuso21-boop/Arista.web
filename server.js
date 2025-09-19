@@ -272,5 +272,94 @@ app.post('/api/coverage', async (req, res) => {
 });
 
 app.listen(PORT, () => {
+
+// Endpoint para solicitudes de fibra redundada
+app.post('/api/fibra-redundada', async (req, res) => {
+  try {
+    const {
+      nombre,
+      email,
+      telefono,
+      empresa,
+      ancho_banda,
+      ubicacion,
+      tolerancia_inactividad,
+      comentarios,
+      acepta_politica
+    } = req.body;
+
+    // Configurar el transporter de nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    // Configurar el email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'info@aristamovil.com',
+      subject: '🔴 SOLICITUD CRÍTICA: Fibra Redundada Empresarial',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border-radius: 10px; overflow: hidden;">
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; text-align: center;">
+            <h1 style="margin: 0; font-size: 24px; font-weight: 300;">🚨 SOLICITUD CRÍTICA DE FIBRA REDUNDADA</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Conectividad empresarial de alta disponibilidad</p>
+          </div>
+          
+          <div style="padding: 30px; background: white; color: #333;">
+            <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+              <h3 style="margin: 0 0 10px 0; color: #dc2626;">⚡ DATOS DEL SOLICITANTE</h3>
+              <p style="margin: 5px 0;"><strong>Nombre:</strong> ${nombre}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+              <p style="margin: 5px 0;"><strong>Teléfono:</strong> ${telefono}</p>
+              <p style="margin: 5px 0;"><strong>Empresa:</strong> ${empresa}</p>
+            </div>
+            
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+              <h3 style="margin: 0 0 10px 0; color: #f59e0b;">🏢 INFORMACIÓN TÉCNICA</h3>
+              <p style="margin: 5px 0;"><strong>Ancho de banda actual:</strong> ${ancho_banda || 'No especificado'}</p>
+              <p style="margin: 5px 0;"><strong>Ubicación:</strong> ${ubicacion}</p>
+              <p style="margin: 5px 0;"><strong>Tolerancia a inactividad:</strong> ${tolerancia_inactividad || 'No especificado'}</p>
+            </div>
+            
+            ${comentarios ? `
+            <div style="background: #e0f2fe; border-left: 4px solid #0288d1; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+              <h3 style="margin: 0 0 10px 0; color: #0288d1;">💬 COMENTARIOS ADICIONALES</h3>
+              <p style="margin: 0; line-height: 1.6;">${comentarios}</p>
+            </div>
+            ` : ''}
+            
+            <div style="background: #f3e8ff; border-left: 4px solid #8b5cf6; padding: 15px; border-radius: 5px;">
+              <h3 style="margin: 0 0 10px 0; color: #8b5cf6;">📋 PRÓXIMOS PASOS</h3>
+              <ul style="margin: 10px 0; padding-left: 20px; line-height: 1.8;">
+                <li>Contactar al cliente en menos de 24 horas</li>
+                <li>Realizar auditoría técnica de la ubicación</li>
+                <li>Evaluar rutas de fibra disponibles</li>
+                <li>Preparar propuesta personalizada</li>
+                <li>Programar instalación si procede</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div style="background: rgba(0,0,0,0.1); padding: 15px; text-align: center; font-size: 12px;">
+            <p style="margin: 0; opacity: 0.8;">Solicitud recibida el ${new Date().toLocaleString('es-ES')} | ARISTA Móvil - Soluciones Empresariales</p>
+          </div>
+        </div>
+      `
+    };
+
+    // Enviar el email
+    await transporter.sendMail(mailOptions);
+    console.log('Solicitud de fibra redundada enviada correctamente a info@aristamovil.com');
+    
+    res.status(200).json({ message: 'Solicitud enviada correctamente' });
+  } catch (error) {
+    console.error('Error al enviar solicitud de fibra redundada:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
