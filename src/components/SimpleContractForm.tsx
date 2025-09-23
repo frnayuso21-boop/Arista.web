@@ -96,7 +96,7 @@ const SimpleContractForm: React.FC<SimpleContractFormProps> = ({ isOpen, onClose
         timestamp: new Date().toISOString()
       };
 
-      const response = await fetch('http://localhost:3001/api/simple-contract', {
+      const response = await fetch('/.netlify/functions/simple-contract', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

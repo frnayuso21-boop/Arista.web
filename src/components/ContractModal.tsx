@@ -97,7 +97,7 @@ const ContractModal: React.FC<ContractModalProps> = ({ isOpen, onClose, plan }) 
         }
       };
 
-      const response = await fetch('http://localhost:3001/api/contract', {
+      const response = await fetch('/.netlify/functions/contract', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

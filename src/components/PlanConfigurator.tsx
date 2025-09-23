@@ -253,7 +253,7 @@ const PlanConfigurator: React.FC<PlanConfiguratorProps> = ({ onBack }) => {
         customerData: formData
       };
       
-      const response = await fetch('http://localhost:3001/api/plan-request', {
+      const response = await fetch('/.netlify/functions/plan-request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

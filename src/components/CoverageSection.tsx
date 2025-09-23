@@ -56,7 +56,7 @@ const CoverageSection: React.FC<CoverageSectionProps> = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:3001/api/coverage', {
+      const response = await fetch('/.netlify/functions/coverage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
