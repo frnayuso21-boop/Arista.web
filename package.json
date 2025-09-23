@@ -8,21 +8,14 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "./deploy.sh",
-    "deploy:staging": "./deploy.sh staging",
     "build:analyze": "vite build --mode analyze",
     "serve": "vite preview --host"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@supabase/supabase-js": "^2.57.4",
     "@types/react-router-dom": "^5.3.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
     "gsap": "^3.13.0",
     "lucide-react": "^0.344.0",
-    "nodemailer": "^7.0.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.9.1"
