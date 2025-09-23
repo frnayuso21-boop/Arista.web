@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Cloud, Lock, Monitor, ArrowLeft, Users, BarChart3, Target, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { sendContactEmail, sendPlanRequestEmail } from '../services/emailService';
 
 interface Plan {
   id: string;
@@ -577,32 +578,53 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-light text-gray-900 mb-6">Solicitar Consulta Gratuita</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
-              setShowCRMModal(false);
-              setShowSuccessMessage(true);
-              setTimeout(() => setShowSuccessMessage(false), 5000);
+              const formData = new FormData(e.target as HTMLFormElement);
+              
+              try {
+                const result = await sendContactEmail({
+                  name: formData.get('contacto') as string,
+                  email: formData.get('email') as string,
+                  phone: formData.get('telefono') as string,
+                  service: 'Consulta CRM Empresarial',
+                  description: `Empresa: ${formData.get('empresa')}
+Empleados: ${formData.get('empleados')}
+Servicios de interés: ${formData.get('servicios')}`
+                });
+                
+                if (result.success) {
+                  setShowCRMModal(false);
+                  setShowSuccessMessage(true);
+                  setTimeout(() => setShowSuccessMessage(false), 5000);
+                } else {
+                  alert('Error al enviar la solicitud. Por favor, inténtelo de nuevo.');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+                alert('Error al enviar la solicitud. Por favor, inténtelo de nuevo.');
+              }
             }}>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="empresa" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="contacto" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
-                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
-                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="tel" name="telefono" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Número de empleados</label>
-                  <select required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <select name="empleados" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Seleccionar...</option>
                     <option value="1-10">1-10 empleados</option>
                     <option value="11-50">11-50 empleados</option>
@@ -612,7 +634,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Servicios de interés</label>
-                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe qué servicios te interesan..."></textarea>
+                  <textarea name="servicios" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe qué servicios te interesan..."></textarea>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">
@@ -640,32 +662,47 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-light text-gray-900 mb-6">Solicitar Consultoría</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
-              setShowConsultoriaModal(false);
-              setShowConsultoriaSuccessMessage(true);
-              setTimeout(() => setShowConsultoriaSuccessMessage(false), 5000);
+              const formData = new FormData(e.target as HTMLFormElement);
+              const consultoriaData = {
+                 name: formData.get('contacto') as string,
+                 email: formData.get('email') as string,
+                 phone: formData.get('telefono') as string,
+                 service: 'Consultoría Empresarial',
+                 description: `Empresa: ${formData.get('empresa')}\nTipo: ${formData.get('tipo')}\nDescripción: ${formData.get('descripcion')}`
+               };
+              
+              try {
+                await sendContactEmail(consultoriaData);
+                setShowConsultoriaModal(false);
+                setShowConsultoriaSuccessMessage(true);
+                setTimeout(() => setShowConsultoriaSuccessMessage(false), 5000);
+              } catch (error) {
+                console.error('Error al enviar consultoría:', error);
+                alert('Error al enviar la solicitud. Por favor, inténtalo de nuevo.');
+              }
             }}>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="empresa" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="contacto" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
-                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
-                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="tel" name="telefono" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Tipo de consultoría</label>
-                  <select required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <select name="tipo" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Seleccionar...</option>
                     <option value="infraestructura">Infraestructura de red</option>
                     <option value="ciberseguridad">Ciberseguridad</option>
@@ -676,7 +713,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Descripción del proyecto</label>
-                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tu proyecto o necesidades..."></textarea>
+                  <textarea name="descripcion" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tu proyecto o necesidades..."></textarea>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">
@@ -704,36 +741,52 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-light text-gray-900 mb-6">Contratar Plan: {selectedPlan}</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
-              setShowPlanModal(false);
-              setShowPlanSuccessMessage(true);
-              setTimeout(() => setShowPlanSuccessMessage(false), 5000);
+              const formData = new FormData(e.target as HTMLFormElement);
+              const planData = {
+                 name: formData.get('contacto') as string,
+                 email: formData.get('email') as string,
+                 phone: formData.get('telefono') as string,
+                 planName: selectedPlan || 'Plan empresarial',
+                 planPrice: 0,
+                 planFeatures: [`Empresa: ${formData.get('empresa')}`, `Dirección: ${formData.get('direccion')}`, `Comentarios: ${formData.get('comentarios')}`]
+               };
+              
+              try {
+                await sendPlanRequestEmail(planData);
+                setShowPlanModal(false);
+                setShowPlanSuccessMessage(true);
+                setTimeout(() => setShowPlanSuccessMessage(false), 5000);
+              } catch (error) {
+                console.error('Error al enviar solicitud de plan:', error);
+                alert('Error al enviar la solicitud. Por favor, inténtalo de nuevo.');
+              }
             }}>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="empresa" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="contacto" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
-                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
-                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="tel" name="telefono" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Dirección de instalación</label>
-                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={2} placeholder="Dirección completa donde instalar el servicio..."></textarea>
+                  <textarea name="direccion" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={2} placeholder="Dirección completa donde instalar el servicio..."></textarea>
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Comentarios adicionales</label>
-                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Cualquier información adicional..."></textarea>
+                  <textarea name="comentarios" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Cualquier información adicional..."></textarea>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">
@@ -761,36 +814,51 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-light text-gray-900 mb-6">Contratar: {selectedOfficeService}</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
-              setShowOfficeModal(false);
-              setShowOfficeSuccessMessage(true);
-              setTimeout(() => setShowOfficeSuccessMessage(false), 5000);
+              const formData = new FormData(e.target as HTMLFormElement);
+              const officeData = {
+                 name: formData.get('contacto') as string,
+                 email: formData.get('email') as string,
+                 phone: formData.get('telefono') as string,
+                 service: selectedOfficeService || 'Servicio de oficina',
+                 description: `Empresa: ${formData.get('empresa')}\nLíneas necesarias: ${formData.get('lineas')}\nComentarios: ${formData.get('comentarios')}`
+               };
+              
+              try {
+                await sendContactEmail(officeData);
+                setShowOfficeModal(false);
+                setShowOfficeSuccessMessage(true);
+                setTimeout(() => setShowOfficeSuccessMessage(false), 5000);
+              } catch (error) {
+                console.error('Error al enviar solicitud de servicio:', error);
+                alert('Error al enviar la solicitud. Por favor, inténtalo de nuevo.');
+              }
             }}>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Nombre de la empresa</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="empresa" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Persona de contacto</label>
-                  <input type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="text" name="contacto" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Email</label>
-                  <input type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Teléfono</label>
-                  <input type="tel" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="tel" name="telefono" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Número de líneas necesarias</label>
-                  <input type="number" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  <input type="number" name="lineas" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-light text-gray-700 mb-1">Comentarios adicionales</label>
-                  <textarea className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tus necesidades específicas..."></textarea>
+                  <textarea name="comentarios" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={3} placeholder="Describe tus necesidades específicas..."></textarea>
                 </div>
               </div>
               <div className="flex gap-3 mt-6">

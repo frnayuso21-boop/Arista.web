@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, CheckCircle, Wifi, Smartphone, Building2, Loader2 } from 'lucide-react';
+import { sendCoverageEmail } from '../services/emailService';
 
 interface CoverageSectionProps {
   onCoverageCheck: () => void;
@@ -20,6 +21,7 @@ const CoverageSection: React.FC<CoverageSectionProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -54,29 +56,31 @@ const CoverageSection: React.FC<CoverageSectionProps> = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setSubmitMessage(null);
     
     try {
-      const response = await fetch('/.netlify/functions/coverage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+      const result = await sendCoverageEmail({
+        name: `${formData.name} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        address: formData.address
       });
 
-      if (response.ok) {
+      if (result.success) {
         setIsLoading(false);
+        setSubmitMessage({ type: 'success', text: 'Solicitud enviada correctamente. Te contactaremos pronto para confirmar la cobertura.' });
         setShowResult(true);
       } else {
-        const errorData = await response.json();
-        console.error('Error:', errorData.error);
+        console.error('Error:', result.message);
         setIsLoading(false);
-        // Aquí podrías mostrar un mensaje de error al usuario
+        setSubmitMessage({ type: 'error', text: result.message || 'Error al enviar la solicitud. Por favor, inténtalo de nuevo.' });
       }
     } catch (error) {
       console.error('Error enviando consulta de cobertura:', error);
       setIsLoading(false);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      setSubmitMessage({ type: 'error', text: 'Error al enviar la solicitud. Por favor, inténtalo de nuevo.' });
     }
   };
 
@@ -95,6 +99,7 @@ const CoverageSection: React.FC<CoverageSectionProps> = () => {
     setShowResult(false);
     setIsLoading(false);
     setShowForm(false);
+    setSubmitMessage(null);
   };
 
   const scrollToParticulares = () => {
@@ -354,6 +359,17 @@ const CoverageSection: React.FC<CoverageSectionProps> = () => {
                   </label>
                 </div>
                 {errors.acceptPrivacy && <p className="text-red-400 text-xs mt-1">{errors.acceptPrivacy}</p>}
+
+                {/* Mensaje de estado */}
+                {submitMessage && (
+                  <div className={`p-4 rounded-lg ${
+                    submitMessage.type === 'success' 
+                      ? 'bg-green-100 border border-green-300 text-green-800' 
+                      : 'bg-red-100 border border-red-300 text-red-800'
+                  }`}>
+                    <p className="text-sm font-medium">{submitMessage.text}</p>
+                  </div>
+                )}
 
                 <div className="flex space-x-4">
                   <button

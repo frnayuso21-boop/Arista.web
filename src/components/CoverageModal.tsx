@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, MapPin, CheckCircle, Loader2 } from 'lucide-react';
+import { sendCoverageEmail } from '../services/emailService';
 
 interface CoverageModalProps {
   isOpen: boolean;
@@ -56,20 +57,20 @@ const CoverageModal: React.FC<CoverageModalProps> = ({ isOpen, onClose }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('/.netlify/functions/coverage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+      const result = await sendCoverageEmail({
+        name: `${formData.name} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        address: formData.address
       });
 
-      if (response.ok) {
+      if (result.success) {
         setIsLoading(false);
         setShowResult(true);
       } else {
-        const errorData = await response.json();
-        console.error('Error:', errorData.error);
+        console.error('Error:', result.message);
         setIsLoading(false);
         // Aquí podrías mostrar un mensaje de error al usuario
       }
