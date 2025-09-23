@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Zap, CheckCircle, Mail, Phone, User } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
+import { sendEnergyEmail } from '../services/emailService';
 
 const EnergyPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -27,11 +28,28 @@ const EnergyPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitted(true);
+    try {
+      const result = await sendEnergyEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        currentBill: formData.currentBill,
+        message: formData.message
+      });
+
+      if (result.success) {
+        setIsSubmitted(true);
+        setIsSubmitting(false);
+      } else {
+        console.error('Error:', result.message);
+        setIsSubmitting(false);
+        alert('Error al enviar la solicitud. Por favor, inténtelo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error enviando solicitud:', error);
       setIsSubmitting(false);
-    }, 1000);
+      alert('Error al enviar la solicitud. Por favor, inténtelo de nuevo.');
+    }
   };
 
   if (isSubmitted) {

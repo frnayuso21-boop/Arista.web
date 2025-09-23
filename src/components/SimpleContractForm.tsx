@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, User, Mail, Phone, MapPin, CheckCircle, Loader2, MessageSquare } from 'lucide-react';
+import { sendPlanRequestEmail } from '../services/emailService';
 
 interface Plan {
   id: string;
@@ -86,30 +87,20 @@ const SimpleContractForm: React.FC<SimpleContractFormProps> = ({ isOpen, onClose
     setIsSubmitting(true);
     
     try {
-      const contractData = {
-        ...formData,
-        plan: {
-          name: plan?.name || 'No especificado',
-          price: plan?.price || 0,
-          features: plan?.features || []
-        },
-        timestamp: new Date().toISOString()
-      };
-
-      const response = await fetch('/.netlify/functions/simple-contract', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(contractData)
+      const result = await sendPlanRequestEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        planName: plan?.name || 'No especificado',
+        planPrice: plan?.price || 0,
+        planFeatures: plan?.features || []
       });
 
-      if (response.ok) {
+      if (result.success) {
         setIsSubmitted(true);
         setIsSubmitting(false);
       } else {
-        const errorData = await response.json();
-        console.error('Error:', errorData.error);
+        console.error('Error:', result.message);
         setIsSubmitting(false);
         alert('Error al enviar la solicitud. Por favor, inténtelo de nuevo.');
       }

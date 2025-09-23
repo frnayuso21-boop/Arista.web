@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Phone, MessageSquare } from 'lucide-react';
+import { sendContactEmail } from '../services/emailService';
 
 interface ContactFormProps {
   isOpen: boolean;
@@ -91,15 +92,15 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, selectedPlan
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/.netlify/functions/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+      const result = await sendContactEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        description: formData.description
       });
 
-      if (response.ok) {
+      if (result.success) {
         setIsSubmitted(true);
         setIsSubmitting(false);
         
@@ -117,15 +118,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, selectedPlan
           });
         }, 3000);
       } else {
-        const errorData = await response.json();
-        console.error('Error:', errorData.error);
+        console.error('Error:', result.message);
         setIsSubmitting(false);
-        // Aquí podrías mostrar un mensaje de error al usuario
+        alert('Error al enviar el formulario. Por favor, inténtelo de nuevo.');
       }
     } catch (error) {
       console.error('Error enviando formulario:', error);
       setIsSubmitting(false);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      alert('Error al enviar el formulario. Por favor, inténtelo de nuevo.');
     }
   };
 
