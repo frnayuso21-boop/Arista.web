@@ -129,13 +129,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
                 Energía
               </button>
               
-              <button
-                onClick={() => navigate('/seguridad')}
-                className="px-3 py-2 text-sm transition-colors text-white hover:text-white/80"
-              >
-                Seguridad
-              </button>
-              
             </div>
              
             {/* Main Navigation - Right side */}
@@ -157,6 +150,13 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
                   className="px-4 py-2 text-sm transition-colors text-white hover:text-white/80"
                 >
                   Empresas
+                </button>
+                
+                <button
+                  onClick={() => navigate('/seguridad')}
+                  className="px-4 py-2 text-sm transition-colors text-white hover:text-white/80"
+                >
+                  Seguridad
                 </button>
               </div>
             
@@ -268,13 +268,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
               Energía
             </button>
             
-            <button
-              onClick={() => navigate('/seguridad')}
-              className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
-            >
-              Seguridad
-            </button>
-            
             <div className="border-t border-white/20 my-2"></div>
             
             <button
@@ -289,6 +282,13 @@ const Header: React.FC<HeaderProps> = ({ activeSection, onScrollToParticularesWi
               className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
             >
               Empresas
+            </button>
+            
+            <button
+              onClick={() => navigate('/seguridad')}
+              className="block w-full text-left px-3 py-3 text-base text-white touch-manipulation"
+            >
+              Seguridad
             </button>
             
             <div className="space-y-2">
