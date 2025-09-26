@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-white mb-8 md:mb-12 leading-relaxed px-4" style={{
               textShadow: '0 0 4px rgba(255, 255, 255, 0.4), 0 0 8px rgba(255, 255, 255, 0.2)'
             }}>
-               El futuro de tu conexión corre por nuestra Fibra.
+               Seguridad, Conexión, Tranquilidad.
              </h1>
             
             <p className="text-base md:text-lg text-white mb-8 leading-relaxed max-w-2xl mx-auto font-light px-4" style={{

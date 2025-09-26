@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Hero from './Hero';
 import ParticularesSection from './ParticularesSection';
-import EnergySection from './EnergySection';
 import EmpresasSection from './EmpresasSection';
 import TVSection from './TVSection';
 import CoverageSection from './CoverageSection';
@@ -78,7 +77,6 @@ const HomePage: React.FC<HomePageProps> = ({
           onShowConfigurator={onShowConfigurator}
           onViewPlanDetail={onViewPlanDetail}
         />
-        <EnergySection />
         <CoverageSection onCoverageCheck={onCoverageCheck} />
         <EmpresasSection />
         <TVSection onContractPlan={onContractPlan} />
