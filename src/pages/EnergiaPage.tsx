@@ -53,39 +53,79 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
 
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <Leaf className="w-10 h-10 text-white" />
+          {/* Endesa Logo */}
+          <div className="relative w-56 h-28 mx-auto mb-8 flex items-center justify-center">
+            <img
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Endesa.svg"
+              alt="Endesa"
+              className="w-full h-full object-contain"
+              loading="eager"
+              decoding="async"
+            />
+            
+            {/* Badge de estado premium */}
+            <div className="absolute -top-1 -right-1 bg-gradient-to-r from-green-400 to-green-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow-xl border border-green-300/50">
+              <span className="flex items-center space-x-1">
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                <span>OFICIAL</span>
+              </span>
+            </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{
             textShadow: '0 0 4px rgba(255, 255, 255, 0.4), 0 0 8px rgba(255, 255, 255, 0.2)'
           }}>
-            Energía Verde
+            Canal Oficial Endesa
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto" style={{
             textShadow: '0 0 3px rgba(255, 255, 255, 0.35), 0 0 6px rgba(255, 255, 255, 0.15)'
           }}>
-            Ahorra en tu factura de la luz con energía 100% renovable y tarifas transparentes
+            Somos el canal oficial de comercializadora de servicios de Endesa. Energía 100% renovable con las mejores tarifas del mercado
           </p>
           
           {/* Ahorro destacado */}
           <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 max-w-md mx-auto mb-8">
             <div className="text-center">
               <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-3 mb-4">
-                <p className="text-green-400 text-sm font-medium">¡Ahorra hasta un 30%!</p>
-                <p className="text-green-300 text-xs">En tu factura de la luz</p>
+                <p className="text-green-400 text-sm font-medium">Sin permanencia - 100% renovable</p>
               </div>
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <TrendingDown className="w-8 h-8 text-green-400" />
-                <div className="text-4xl font-bold text-green-400">30%</div>
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <Zap className="w-8 h-8 text-green-400" />
+                <div className="text-4xl font-bold text-green-400">0.14€</div>
               </div>
-              <div className="text-white/70 text-lg mb-6">menos en tu factura</div>
+              <div className="text-white/70 text-lg">el kWh</div>
+              <div className="text-white/80 text-sm mt-3">Promo Tu Casa: 0,079 €/kWh en tus 50 horas de mayor consumo cada mes.</div>
               <button
                 onClick={handleRequestInfo}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="mt-6 w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Solicitar información
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* Promociones especiales */}
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-sm rounded-xl p-6 border border-green-400/30 text-center">
+            <div className="w-16 h-16 bg-green-500/20 border-2 border-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl font-bold text-green-400">100€</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">Descuento en Electricidad</h3>
+            <p className="text-white/80 text-xs mt-2">Descuento en tus facturas - Programa PARA TI</p>
+          </div>
+          <div className="bg-gradient-to-br from-teal-500/20 to-teal-600/20 backdrop-blur-sm rounded-xl p-6 border border-teal-400/30 text-center">
+            <div className="w-16 h-16 bg-teal-500/20 border-2 border-teal-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl font-bold text-teal-400">60€</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">Descuento en Gas</h3>
+            <p className="text-white/80 text-xs mt-2">Descuento en tus facturas - Programa PARA TI</p>
+          </div>
+          <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-sm rounded-xl p-6 border border-blue-400/30 text-center">
+            <div className="w-16 h-16 bg-blue-500/20 border-2 border-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl font-bold text-blue-400">50€</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">Regalo de Bienvenida</h3>
+            <p className="text-white/70 text-sm">Descuento adicional por contratar</p>
           </div>
         </div>
 
@@ -98,18 +138,18 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
             <TrendingDown className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-white font-semibold mb-2">Ahorro garantizado</h3>
-            <p className="text-white/70 text-sm">Hasta 30% menos en tu factura</p>
+            <h3 className="text-white font-semibold mb-2">Sin permanencia</h3>
+            <p className="text-white/70 text-sm">Contratación flexible</p>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
             <Shield className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-            <h3 className="text-white font-semibold mb-2">Sin sorpresas</h3>
-            <p className="text-white/70 text-sm">Tarifas transparentes</p>
+            <h3 className="text-white font-semibold mb-2">Canal oficial</h3>
+            <p className="text-white/70 text-sm">Comercializadora Endesa</p>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center">
             <CheckCircle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
             <h3 className="text-white font-semibold mb-2">Máxima flexibilidad</h3>
-            <p className="text-white/70 text-sm">Libertad total</p>
+            <p className="text-white/70 text-sm">Sin compromisos</p>
           </div>
         </div>
 
@@ -121,18 +161,18 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
         <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 mb-16">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center justify-center">
             <CheckCircle className="w-6 h-6 text-green-400 mr-3" />
-            Incluido en todos nuestros planes
+            Ventajas de contratar con nosotros
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
             {[
+              'Precio fijo 0.14€/kWh sin permanencia',
               'Energía 100% renovable certificada',
+              '100€ de descuento en electricidad',
+              '60€ de descuento en gas',
+              '50€ de regalo de bienvenida',
               'Cambio gratuito y sin cortes',
-              'Facturación transparente sin sorpresas',
               'Atención al cliente 24/7',
-              'Máxima flexibilidad',
-              'Factura electrónica gratuita',
-              'Consejos de eficiencia energética',
-              'Soporte técnico especializado'
+              'Facturación transparente sin sorpresas'
             ].map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
@@ -194,10 +234,10 @@ const EnergiaPage: React.FC<EnergiaPageProps> = ({ onBack }) => {
         {/* CTA Final */}
         <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-400/30 rounded-2xl p-8 text-center mb-16">
           <h2 className="text-2xl font-bold text-white mb-4">
-            Únete a la energía del futuro
+            Ahorra con el canal oficial Endesa
           </h2>
           <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-            Miles de familias ya ahorran con nuestra energía 100% renovable. Únete y empieza a reducir tu factura desde el primer día
+            Precio fijo 0.14€/kWh sin permanencia. 100€ de descuento en electricidad y 60€ de descuento en gas, más 50€ de regalo de bienvenida. Energía 100% renovable certificada
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

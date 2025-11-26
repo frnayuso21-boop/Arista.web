@@ -7,6 +7,7 @@ import TVSection from './TVSection';
 import CoverageSection from './CoverageSection';
 import FAQSection from './FAQSection';
 import Footer from './Footer';
+import InvoiceComparator from './InvoiceComparator';
 
 interface Plan {
   id: string;
@@ -78,6 +79,17 @@ const HomePage: React.FC<HomePageProps> = ({
           onViewPlanDetail={onViewPlanDetail}
         />
         <CoverageSection onCoverageCheck={onCoverageCheck} />
+        
+        <section id="comparador" className="py-12 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-slate-900/90 rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl text-white">
+              <h2 className="text-2xl font-semibold mb-2">Comparador de Facturas</h2>
+              <p className="text-white/80 mb-6">Sube tu factura y descubre tu ahorro con nuestros precios de particulares.</p>
+              <InvoiceComparator />
+            </div>
+          </div>
+        </section>
+         
         <EmpresasSection />
         <TVSection onContractPlan={onContractPlan} />
         <FAQSection />

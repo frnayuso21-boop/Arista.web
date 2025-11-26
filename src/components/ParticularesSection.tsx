@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Wifi, Smartphone, Tv, CheckCircle, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { Wifi, Smartphone, Tv, CheckCircle } from 'lucide-react';
 
 interface Plan {
   id: string;
@@ -15,219 +15,51 @@ interface ParticularesProps {
 }
 
 const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onShowConfigurator, onViewPlanDetail }) => {
-  const [activeTab, setActiveTab] = useState('fibra');
+  const [activeTab, setActiveTab] = useState<string>('fibra');
+  
+  // Estados para los selectores de móvil
+  const [selectedJuntosData, setSelectedJuntosData] = useState('40');
+  const [selectedCompartidosData, setSelectedCompartidosData] = useState('60');
+  const [selectedEsimPlan, setSelectedEsimPlan] = useState('15');
+  
+  // Estados para los selectores de fibra+móvil+tv
   const [selectedData300, setSelectedData300] = useState('40');
-  const [selectedData600, setSelectedData600] = useState('40');
-  const [selectedData1000, setSelectedData1000] = useState('40');
+  const [selectedData600, setSelectedData600] = useState('75');
+  const [selectedData1000, setSelectedData1000] = useState('100');
   const [additionalLines300, setAdditionalLines300] = useState(0);
   const [additionalLines600, setAdditionalLines600] = useState(0);
   const [additionalLines1000, setAdditionalLines1000] = useState(0);
-  const [additionalLineData300, setAdditionalLineData300] = useState('40');
-  const [additionalLineData600, setAdditionalLineData600] = useState('40');
-  const [additionalLineData1000, setAdditionalLineData1000] = useState('40');
-  const [selectedJuntosData, setSelectedJuntosData] = useState('40');
-  const [selectedCompartidosData, setSelectedCompartidosData] = useState('60');
-  const [selectedEsimPlan, setSelectedEsimPlan] = useState('voz-15gb');
-  const [additionalJuntosLines, setAdditionalJuntosLines] = useState(0);
-  const [additionalCompartidosLines, setAdditionalCompartidosLines] = useState(0);
-  const [additionalJuntosLineData, setAdditionalJuntosLineData] = useState('40');
-  const [additionalCompartidosLineData, setAdditionalCompartidosLineData] = useState('60');
-  const [additionalEsimLines, setAdditionalEsimLines] = useState(0);
-  const [additionalEsimLineData, setAdditionalEsimLineData] = useState('voz-15gb');
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [selectedTvPlan, setSelectedTvPlan] = useState('600-75gb');
-  const [selectedTvAdditionalLines, setSelectedTvAdditionalLines] = useState('0');
-  const [tvAdditionalLinesCount, setTvAdditionalLinesCount] = useState(0);
+  const [fm300Data, setFm300Data] = useState('40');
+  const [fm600Data, setFm600Data] = useState('80');
+  const [fm1000Data, setFm1000Data] = useState('80');
+  const [fmAddLines300, setFmAddLines300] = useState(0);
+  const [fmAddLineType300, setFmAddLineType300] = useState<'40' | '80'>('40');
+  const [fmAddLines600, setFmAddLines600] = useState(0);
+  const [fmAddLineType600, setFmAddLineType600] = useState<'40' | '80'>('40');
+  const [fmAddLines1000, setFmAddLines1000] = useState(0);
+  const [fmAddLineType1000, setFmAddLineType1000] = useState<'40' | '80'>('40');
+
+  // Funciones para manejar la contratación
+  const handleContractPlan = (plan: Plan) => {
+    onContractPlan(plan);
+  };
+
+  const handleViewPlanDetail = (_plan: Plan) => {
+    onViewPlanDetail(_plan);
+  };
 
   const tabs = [
     { id: 'fibra', name: 'Fibra', mobileLabel: 'Fibra', icon: Wifi },
-    { id: 'fibra-movil', name: 'Fibra + Móvil', mobileLabel: 'Fibra+Móvil', icon: Wifi, hasOffer: true },
+    { id: 'fibra-movil', name: 'Fibra + Móvil', mobileLabel: 'Fibra+Móvil', icon: Wifi },
     { id: 'movil', name: 'Móvil', mobileLabel: 'Móvil', icon: Smartphone },
     { id: 'tv', name: 'TV', mobileLabel: 'TV', icon: Tv },
-    { id: 'fibra-movil-tv', name: 'Fibra + Móvil + TV', mobileLabel: 'Fibra+Móvil+TV', icon: Tv, hasOffer: true }
+    { id: 'fibra-movil-tv', name: 'Fibra + Móvil + TV', mobileLabel: 'Fibra+Móvil+TV', icon: Tv }
   ];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // Handle scroll logic here if needed
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Reset additional lines when data plan changes to non-eligible plans
-  useEffect(() => {
-    if (selectedData300 !== '40' && selectedData300 !== '80') {
-      setAdditionalLines300(0);
-    }
-  }, [selectedData300]);
-
-  useEffect(() => {
-    if (selectedData600 !== '40' && selectedData600 !== '80') {
-      setAdditionalLines600(0);
-    }
-  }, [selectedData600]);
-
-  useEffect(() => {
-    if (selectedData1000 !== '40' && selectedData1000 !== '80') {
-      setAdditionalLines1000(0);
-    }
-  }, [selectedData1000]);
-
-  const fibraSpeedOptions = [
-    { value: '300', label: '300 Mbps', price: 25.99 },
-    { value: '600', label: '600 Mbps', price: 27.99 },
-    { value: '1000', label: '1 Gbps', price: 32.99 }
-  ];
-
-  const dataOptions300 = [
-    { value: '40', label: '40 GB - 2,90€', price: 29.90 }
-  ];
-
-  const dataOptions600 = [
-    { value: '40', label: '40 GB - 2,90€', price: 32.89 },
-    { value: '80', label: '80 GB - 4,90€', price: 34.89 },
-    { value: '120', label: '120 GB (compartidos) - 10,90€', price: 40.89 },
-    { value: '200', label: '200 GB (compartidos) - 15,90€', price: 45.89 }
-  ];
-
-  const dataOptions1000 = [
-    { value: '40', label: '40 GB - 2,90€', price: 37.90 },
-    { value: '80', label: '80 GB - 4,90€', price: 39.90 },
-    { value: '120', label: '120 GB (compartidos) - 10,90€', price: 45.90 },
-    { value: '200', label: '200 GB (compartidos) - 15,89€', price: 50.89 }
-  ];
-
-  const juntosDataOptions = [
-    { value: '40', label: '40 GB - 8,90€', price: 8.90 },
-    { value: '60', label: '60 GB - 9,90€', price: 9.90 },
-    { value: '100', label: '100 GB - 10,90€', price: 10.90 },
-    { value: '200', label: '200 GB - 14,90€', price: 14.90 },
-    { value: '400', label: '400 GB - 24,90€', price: 24.90 }
-  ];
-
-  const compartidosDataOptions = [
-    { value: '60', label: '60 GB - 20,90€', price: 20.90 },
-    { value: '80', label: '80 GB - 25,90€', price: 25.90 },
-    { value: '150', label: '150 GB - 35,90€', price: 35.90 }
-  ];
-
-  const esimOptions = [
-    { value: 'solo-voz', label: 'ARISTA Solo Voz', price: 5.95 },
-    { value: 'voz-15gb', label: 'ARISTA Ilimitada Voz + 15GB', price: 7.95 },
-    { value: 'voz-40gb', label: 'ARISTA Ilimitada Voz + 40GB', price: 9.95 },
-    { value: 'voz-80gb', label: 'ARISTA Ilimitada Voz + 80GB', price: 11.75 },
-    { value: 'voz-160gb', label: 'ARISTA Ilimitada Voz + 160GB', price: 15.75 },
-    { value: 'voz-datos', label: 'ARISTA Ilimitada Voz y Datos', price: 23.75 }
-  ];
-
-  const tvPlanOptions = [
-    { value: '600-75gb', label: 'Fibra 600 Mbps + 75 GB', price: 54.90 },
-    { value: '1000-unlimited', label: 'Fibra 1000 Mbps + Móvil ilimitado', price: 61.25 }
-  ];
-
-  const tvAdditionalLinesOptions = [
-    { value: '0', label: 'Sin líneas adicionales', price: 0 },
-    { value: 'la-unlimited', label: 'LA Ilimitadas + llamadas', price: 7.36 },
-    { value: 'la-150gb', label: 'LA 150GB + llamadas', price: 6.53 },
-    { value: 'la-75gb', label: 'LA 75GB + llamadas', price: 5.70 },
-    { value: 'la-35gb', label: 'LA 35GB + llamadas', price: 4.88 },
-    { value: 'family-300gb', label: '300GB + 3 llamadas (3x100 GB)', price: 25.54 },
-    { value: 'family-150gb', label: '150GB + 3 llamadas (3x50 GB)', price: 22.23 },
-    { value: 'family-75gb', label: '75GB + 3 llamadas (3x25 GB)', price: 18.93 }
-  ];
-
-  const getAdditionalLinePrice = (dataAmount: string) => {
-    if (dataAmount === '40') return 5.90;
-    if (dataAmount === '80') return 7.90;
-    return 5.90; // default
-  };
-
-  const getTvPlanPrice = () => {
-    const basePlan = tvPlanOptions.find(option => option.value === selectedTvPlan);
-    const additionalLine = tvAdditionalLinesOptions.find(option => option.value === selectedTvAdditionalLines);
-    return (basePlan?.price || 0) + (additionalLine?.price || 0) * (selectedTvAdditionalLines.startsWith('family-') ? 1 : tvAdditionalLinesCount);
-  };
-
-  const getTvPlanFeatures = () => {
-    const basePlan = tvPlanOptions.find(option => option.value === selectedTvPlan);
-    const additionalLine = tvAdditionalLinesOptions.find(option => option.value === selectedTvAdditionalLines);
-    
-    let features = [];
-    if (selectedTvPlan === '600-75gb') {
-      features = ['Fibra 600 Mbps simétrica', '75 GB móvil + llamadas ilimitadas', '🎬 Prime Video incluido', 'Router WiFi 6 Pro incluido'];
-    } else {
-      features = ['Fibra 1000 Mbps simétrica', 'Móvil ilimitado + llamadas ilimitadas', '🎬 Prime Video incluido', 'Router WiFi 6E Premium'];
-    }
-    
-    if (selectedTvAdditionalLines !== '0') {
-      if (selectedTvAdditionalLines.startsWith('family-')) {
-        features.push(additionalLine?.label || '');
-      } else if (tvAdditionalLinesCount > 0) {
-        features.push(`${tvAdditionalLinesCount} línea${tvAdditionalLinesCount > 1 ? 's' : ''} adicional${tvAdditionalLinesCount > 1 ? 'es' : ''}: ${additionalLine?.label || ''}`);
-      }
-    }
-    
-    return features;
-  };
-
-  const getPrice300 = () => {
-    const selectedOption = dataOptions300.find(opt => opt.value === selectedData300);
-    const basePrice = selectedOption ? selectedOption.price : 29.90;
-    const additionalLinesPrice = additionalLines300 * getAdditionalLinePrice(additionalLineData300);
-    return basePrice + additionalLinesPrice;
-  };
-
-  const getPrice600 = () => {
-    const selectedOption = dataOptions600.find(opt => opt.value === selectedData600);
-    const basePrice = selectedOption ? selectedOption.price : 32.89;
-    const additionalLinesPrice = additionalLines600 * getAdditionalLinePrice(additionalLineData600);
-    return basePrice + additionalLinesPrice;
-  };
-
-  const getPrice1000 = () => {
-    const selectedOption = dataOptions1000.find(opt => opt.value === selectedData1000);
-    const basePrice = selectedOption ? selectedOption.price : 37.90;
-    const additionalLinesPrice = additionalLines1000 * getAdditionalLinePrice(additionalLineData1000);
-    return basePrice + additionalLinesPrice;
-  };
-
-  const getMobileAdditionalLinePrice = (dataAmount: string) => {
-    if (dataAmount === '40') return 5.90;
-    if (dataAmount === '60') return 7.90;
-    if (dataAmount === '100') return 8.90;
-    if (dataAmount === '200') return 12.90;
-    if (dataAmount === '400') return 19.90;
-    return 5.90; // default
-  };
-
-  const getSelectedJuntosPrice = () => {
-    const basePrice = juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.price || 0;
-    const additionalLinesPrice = additionalJuntosLines * getMobileAdditionalLinePrice(additionalJuntosLineData);
-    return basePrice + additionalLinesPrice;
-  };
-
-  const getSelectedCompartidosPrice = () => {
-    const basePrice = compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.price || 0;
-    const additionalLinesPrice = additionalCompartidosLines * getMobileAdditionalLinePrice(additionalCompartidosLineData);
-    return basePrice + additionalLinesPrice;
-  };
-
-  const getEsimAdditionalLinePrice = (planValue: string) => {
-    const basePlan = esimOptions.find(opt => opt.value === planValue);
-    return basePlan ? basePlan.price * 0.8 : 4.76; // 20% descuento en líneas adicionales
-  };
-
-  const getSelectedEsimPrice = () => {
-    const basePrice = esimOptions.find(opt => opt.value === selectedEsimPlan)?.price || 0;
-    const additionalLinesPrice = additionalEsimLines * getEsimAdditionalLinePrice(additionalEsimLineData);
-    return basePrice + additionalLinesPrice;
-  };
 
   return (
     <section 
-      id="particulares" 
-      className="py-16"
+      id="particulares"
+      className="relative py-20 overflow-hidden"
       style={{
         background: `
           radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
@@ -251,126 +83,33 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex items-center space-x-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-all whitespace-nowrap touch-manipulation ${
+                  className={`relative px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
                     activeTab === tab.id
                       ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-white hover:text-white/80'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <tab.icon className="w-3 md:w-4 h-3 md:h-4" />
+                  <tab.icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{tab.name}</span>
                   <span className="sm:hidden">{tab.mobileLabel}</span>
-                  {tab.hasOffer && (
-                    <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold shadow-lg transform rotate-12">
-                      Oferta
-                    </div>
-                  )}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
+
+
         <div className="max-w-6xl mx-auto">
           {activeTab === 'fibra' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {fibraSpeedOptions.map((option, index) => {
-                const colors = [
-                  { bg: 'from-blue-500 to-blue-600', text: 'text-blue-600', button: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700', border: 'border-blue-200' },
-                  { bg: 'from-purple-500 to-purple-600', text: 'text-purple-600', button: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700', border: 'border-purple-200' },
-                  { bg: 'from-emerald-500 to-emerald-600', text: 'text-emerald-600', button: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700', border: 'border-emerald-200' }
-                ];
-                const colorScheme = colors[index] || colors[0];
-                const isRecommended = index === 1; // 600 Mbps es recomendado
-                
-                return (
-                  <div 
-                    key={option.value} 
-                    className={`relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-opacity-80`}
-                    onClick={() => onViewPlanDetail({
-                      id: `fibra-${option.value}`,
-                      name: `Fibra ${option.label}`,
-                      price: option.price,
-                      features: ['Velocidad simétrica', 'Máxima flexibilidad', 'Instalación gratuita', 'Router WiFi 6 incluido']
-                    })}
-                  >
-                    {isRecommended && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-xs font-bold shadow-lg">
-                          RECOMENDADO
-                        </span>
-                      </div>
-                    )}
-                    <div className="text-center mb-6">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${colorScheme.bg} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                        <Wifi className="w-8 h-8 text-white" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{option.label}</h3>
-                      <div className={`text-3xl font-bold ${colorScheme.text} mb-1`}>{option.price}€</div>
-                      <div className="text-gray-500 text-sm">/mes</div>
-                    </div>
-                    <ul className="space-y-2 mb-6">
-                      <li className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        Velocidad simétrica
-                      </li>
-                      <li className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        Máxima flexibilidad
-                      </li>
-                      <li className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        Instalación gratuita
-                      </li>
-                      <li className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        Router WiFi 6 incluido
-                      </li>
-                    </ul>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onContractPlan({
-                          id: `fibra-${option.value}`,
-                          name: `Fibra ${option.label}`,
-                          price: option.price,
-                          features: ['Velocidad simétrica', 'Máxima flexibilidad', 'Instalación gratuita', 'Router WiFi 6 incluido']
-                        });
-                      }}
-                      className={`w-full bg-gradient-to-r ${colorScheme.button} text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg`}
-                    >
-                      Lo quiero
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {activeTab === 'fibra-movil' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Fibra 300 Mbps + Móvil */}
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
-                onClick={() => onViewPlanDetail({
-                  id: 'fibra-movil-300',
-                  name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
-                  price: getPrice300(),
-                  features: [
-                    '300 Mbps simétrica', 
-                    `${selectedData300} GB móvil`, 
-                    'Llamadas ilimitadas', 
-                    'Router WiFi 6 incluido',
-                    ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
-                  ]
-                })}
-              >
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300" data-plan-id="fibra600-40gb-m">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 300 Mbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-blue-600 mb-1">{getPrice300().toFixed(2)}€</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 300 Mbps</h3>
+                  <div className="text-3xl font-bold text-blue-600 mb-1">26.99€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
                 <ul className="space-y-2 mb-4">
@@ -380,7 +119,124 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    {selectedData300} GB móvil
+                    Router WiFi 6 incluido
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Instalación gratuita
+                  </li>
+                </ul>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: 'fibra-300',
+                    name: 'Fibra 300 Mbps',
+                    price: 26.99,
+                    features: ['300 Mbps simétrica','Router WiFi 6 incluido','Instalación gratuita']
+                  })}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Lo quiero
+                </button>
+              </div>
+
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Wifi className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 600 Mbps</h3>
+                  <div className="text-3xl font-bold text-purple-600 mb-1">29.89€</div>
+                  <div className="text-gray-500 text-sm">/mes</div>
+                  <div className="mt-2">
+                    <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">
+                      Recomendado
+                    </span>
+                  </div>
+                </div>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    600 Mbps simétrica
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Router WiFi 6 Pro incluido
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Instalación gratuita
+                  </li>
+                </ul>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: 'fibra-600',
+                    name: 'Fibra 600 Mbps',
+                    price: 29.89,
+                    features: ['600 Mbps simétrica','Router WiFi 6 Pro incluido','Instalación gratuita']
+                  })}
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Lo quiero
+                </button>
+              </div>
+
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-300" data-plan-id="fibra1000-40gb-m">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Wifi className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 1 Gbps</h3>
+                  <div className="text-3xl font-bold text-emerald-600 mb-1">32.99€</div>
+                  <div className="text-gray-500 text-sm">/mes</div>
+                </div>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    1 Gbps simétrica
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Router WiFi 6 Pro incluido
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Instalación gratuita
+                  </li>
+                </ul>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: 'fibra-1000',
+                    name: 'Fibra 1 Gbps',
+                    price: 32.99,
+                    features: ['1 Gbps simétrica','Router WiFi 6 Pro incluido','Instalación gratuita']
+                  })}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Lo quiero
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'fibra-movil' && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Wifi className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 300 Mbps + Móvil 40GB</h3>
+                  <div className="text-3xl font-bold text-blue-600 mb-1">{(29.89 + fmAddLines300 * (fmAddLineType300 === '40' ? 5.70 : 7.90)).toFixed(2)}€</div>
+                  <div className="text-gray-500 text-sm">/mes</div>
+                </div>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    300 Mbps simétrica
+                  </li>
+                  <li className="flex items-center text-sm text-gray-600">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    40 GB móvil
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -391,135 +247,57 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                     Router WiFi 6 incluido
                   </li>
                 </ul>
+                
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
-                  <select
-                    value={selectedData300}
-                    onChange={(e) => setSelectedData300(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <select 
+                    value={fmAddLines300}
+                    onChange={(e) => setFmAddLines300(parseInt(e.target.value))}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    {dataOptions300.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
+                    <option value="0">Sin líneas adicionales</option>
+                    <option value="1">1 línea adicional</option>
+                    <option value="2">2 líneas adicionales</option>
+                    <option value="3">3 líneas adicionales</option>
                   </select>
                 </div>
-
-                {(selectedData300 === '40' || selectedData300 === '80') && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                    <div className="mb-3">
-                      <select
-                        value={additionalLineData300}
-                        onChange={(e) => setAdditionalLineData300(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm touch-manipulation"
-                      >
-                        <option value="40">40 GB - 5,90€/mes</option>
-                        <option value="80">80 GB - 7,90€/mes</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">
-                          {additionalLines300} línea{additionalLines300 !== 1 ? 's' : ''} adicional{additionalLines300 !== 1 ? 'es' : ''}
-                        </span>
-                        {additionalLines300 > 0 && (
-                          <span className="text-sm text-blue-600 font-medium">
-                            +{(additionalLines300 * getAdditionalLinePrice(additionalLineData300)).toFixed(2)}€/mes
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines300(Math.max(0, additionalLines300 - 1));
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          disabled={additionalLines300 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center font-medium">{additionalLines300}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines300(additionalLines300 + 1);
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center font-bold touch-manipulation"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    {additionalLines300 > 0 && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional incluye {additionalLineData300} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData300).toFixed(2)}€/mes
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
-                      id: 'fibra-movil-300',
-                      name: `Fibra 300 Mbps + Móvil ${selectedData300}GB${additionalLines300 > 0 ? ` + ${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''}` : ''}`,
-                      price: getPrice300(),
-                      features: [
-                        '300 Mbps simétrica', 
-                        `${selectedData300} GB móvil`, 
-                        'Llamadas ilimitadas', 
-                        'Router WiFi 6 incluido',
-                        ...(additionalLines300 > 0 ? [`${additionalLines300} línea${additionalLines300 > 1 ? 's' : ''} adicional${additionalLines300 > 1 ? 'es' : ''} con ${additionalLineData300} GB cada una`] : [])
-                      ]
-                    });
-                  }}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos por línea adicional:</label>
+                  <select 
+                    value={fmAddLineType300}
+                    onChange={(e) => setFmAddLineType300(e.target.value as '40' | '80')}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="40">40 GB (+5,70€/línea)</option>
+                    <option value="80">80 GB (+7,90€/línea)</option>
+                  </select>
+                </div>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: `fibra-movil-300-40gb-${fmAddLines300}-${fmAddLineType300}`,
+                    name: `Fibra 300 Mbps + Móvil 40GB${fmAddLines300 > 0 ? ` + ${fmAddLines300} línea${fmAddLines300 > 1 ? 's' : ''} adicional${fmAddLines300 > 1 ? 'es' : ''}` : ''}`,
+                    price: 29.89 + fmAddLines300 * (fmAddLineType300 === '40' ? 5.70 : 7.90),
+                    features: [
+                      '300 Mbps simétrica',
+                      '40 GB móvil',
+                      'Llamadas ilimitadas',
+                      'Router WiFi 6 incluido',
+                      ...(fmAddLines300 > 0 ? [`${fmAddLines300} línea${fmAddLines300 > 1 ? 's' : ''} adicional${fmAddLines300 > 1 ? 'es' : ''} ${fmAddLineType300 === '40' ? '40 GB' : '80 GB'}`] : [])
+                    ]
+                  })}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
                 </button>
               </div>
 
-              {/* Fibra 600 Mbps + Móvil */}
-              <div 
-                className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300"
-                onClick={() => onViewPlanDetail({
-                  id: 'fibra-movil-600',
-                  name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
-                  price: getPrice600(),
-                  features: [
-                    '600 Mbps simétrica', 
-                    `${selectedData600} GB móvil`, 
-                    'Llamadas ilimitadas', 
-                    'Router WiFi 6 Pro incluido',
-                    ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
-                  ]
-                })}
-              >
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-xs font-bold shadow-lg">
-                    RECOMENDADO
-                  </span>
-                </div>
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 600 Mbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-purple-600 mb-1">{getPrice600().toFixed(2)}€</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 600 Mbps + Móvil {fm600Data === '40' ? '40GB' : fm600Data === '80' ? '80GB' : fm600Data === '120' ? '120 GB' : '200 GB'}</h3>
+                  <div className="text-3xl font-bold text-purple-600 mb-1">{(((fm600Data === '40' ? 32.89 : fm600Data === '80' ? 34.89 : fm600Data === '120' ? 40.89 : 45.89)) + fmAddLines600 * (fmAddLineType600 === '40' ? 5.70 : 7.90)).toFixed(2)}€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
                 <ul className="space-y-2 mb-4">
@@ -529,7 +307,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    {selectedData600} GB móvil
+                    {fm600Data === '40' ? '40 GB móvil' : fm600Data === '80' ? '80 GB móvil' : fm600Data === '120' ? '120 GB móvil' : '200 GB móvil'}
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -542,129 +320,67 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                 </ul>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
-                  <select
-                    value={selectedData600}
-                    onChange={(e) => setSelectedData600(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent touch-manipulation"
+                  <select 
+                    value={fm600Data}
+                    onChange={(e) => setFm600Data(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   >
-                    {dataOptions600.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
+                    <option value="40">40 GB</option>
+                    <option value="80">80 GB</option>
+                    <option value="120">120 GB</option>
+                    <option value="200">200 GB</option>
                   </select>
                 </div>
-
-                {(selectedData600 === '40' || selectedData600 === '80') && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                    <div className="mb-3">
-                      <select
-                        value={additionalLineData600}
-                        onChange={(e) => setAdditionalLineData600(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm touch-manipulation"
-                      >
-                        <option value="40">40 GB - 5,90€/mes</option>
-                        <option value="80">80 GB - 7,90€/mes</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">
-                          {additionalLines600} línea{additionalLines600 !== 1 ? 's' : ''} adicional{additionalLines600 !== 1 ? 'es' : ''}
-                        </span>
-                        {additionalLines600 > 0 && (
-                          <span className="text-sm text-purple-600 font-medium">
-                            +{(additionalLines600 * getAdditionalLinePrice(additionalLineData600)).toFixed(2)}€/mes
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines600(Math.max(0, additionalLines600 - 1));
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          disabled={additionalLines600 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center font-medium">{additionalLines600}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines600(additionalLines600 + 1);
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold touch-manipulation"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    {additionalLines600 > 0 && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional incluye {additionalLineData600} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData600).toFixed(2)}€/mes
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
-                      id: 'fibra-movil-600',
-                      name: `Fibra 600 Mbps + Móvil ${selectedData600}GB${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
-                      price: getPrice600(),
-                      features: [
-                        '600 Mbps simétrica', 
-                        `${selectedData600} GB móvil`, 
-                        'Llamadas ilimitadas', 
-                        'Router WiFi 6 Pro incluido',
-                        ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} con ${additionalLineData600} GB cada una`] : [])
-                      ]
-                    });
-                  }}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <select 
+                    value={fmAddLines600}
+                    onChange={(e) => setFmAddLines600(parseInt(e.target.value))}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="0">Sin líneas adicionales</option>
+                    <option value="1">1 línea adicional</option>
+                    <option value="2">2 líneas adicionales</option>
+                    <option value="3">3 líneas adicionales</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos por línea adicional:</label>
+                  <select 
+                    value={fmAddLineType600}
+                    onChange={(e) => setFmAddLineType600(e.target.value as '40' | '80')}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="40">40 GB (+5,70€/línea)</option>
+                    <option value="80">80 GB (+7,90€/línea)</option>
+                  </select>
+                </div>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: `fibra-movil-600-${fm600Data}`,
+                    name: `Fibra 600 Mbps + Móvil ${fm600Data === '40' ? '40GB' : fm600Data === '80' ? '80GB' : fm600Data === '120' ? '120 GB' : '200 GB'}${fmAddLines600 > 0 ? ` + ${fmAddLines600} línea${fmAddLines600 > 1 ? 's' : ''} adicional${fmAddLines600 > 1 ? 'es' : ''}` : ''}`,
+                    price: (fm600Data === '40' ? 32.89 : fm600Data === '80' ? 34.89 : fm600Data === '120' ? 40.89 : 45.89) + fmAddLines600 * (fmAddLineType600 === '40' ? 5.70 : 7.90),
+                    features: [
+                      '600 Mbps simétrica',
+                      fm600Data === '40' ? '40 GB móvil' : fm600Data === '80' ? '80 GB móvil' : fm600Data === '120' ? '120 GB móvil' : '200 GB móvil',
+                      'Llamadas ilimitadas',
+                      'Router WiFi 6 Pro incluido',
+                      ...(fmAddLines600 > 0 ? [`${fmAddLines600} línea${fmAddLines600 > 1 ? 's' : ''} adicional${fmAddLines600 > 1 ? 'es' : ''} ${fmAddLineType600 === '40' ? '40 GB' : '80 GB'}`] : [])
+                    ]
+                  })}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
                 </button>
               </div>
 
-              {/* Fibra 1 Gbps + Móvil */}
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-green-300"
-                onClick={() => onViewPlanDetail({
-                  id: 'fibra-movil-1gb',
-                  name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
-                  price: getPrice1000(),
-                  features: [
-                    '1 Gbps simétrica', 
-                    `${selectedData1000} GB móvil`, 
-                    'Llamadas ilimitadas', 
-                    'Router WiFi 6 Pro incluido',
-                    'Instalación gratuita',
-                    ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
-                  ]
-                })}
-              >
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-300">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Wifi className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 1 Gbps + Móvil</h3>
-                  <div className="text-3xl font-bold text-emerald-600 mb-1">{getPrice1000().toFixed(2)}€</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 1 Gbps + Móvil {fm1000Data === '40' ? '40GB' : fm1000Data === '80' ? '80GB' : fm1000Data === '120' ? '120 GB' : '200 GB'}</h3>
+                  <div className="text-3xl font-bold text-emerald-600 mb-1">{(((fm1000Data === '40' ? 37.89 : fm1000Data === '80' ? 39.89 : fm1000Data === '120' ? 45.89 : 50.89)) + fmAddLines1000 * (fmAddLineType1000 === '40' ? 5.70 : 7.90)).toFixed(2)}€</div>
                   <div className="text-gray-500 text-sm">/mes</div>
                 </div>
                 <ul className="space-y-2 mb-4">
@@ -674,7 +390,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    {selectedData1000} GB móvil
+                    {fm1000Data === '40' ? '40 GB móvil' : fm1000Data === '80' ? '80 GB móvil' : fm1000Data === '120' ? '120 GB móvil' : '200 GB móvil'}
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -682,105 +398,59 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
                   </li>
                   <li className="flex items-center text-sm text-gray-600">
                     <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    Router WiFi 6E Premium
+                    Router WiFi 6 Pro incluido
                   </li>
                 </ul>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
-                  <select
-                    value={selectedData1000}
-                    onChange={(e) => setSelectedData1000(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent touch-manipulation"
+                  <select 
+                    value={fm1000Data}
+                    onChange={(e) => setFm1000Data(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   >
-                    {dataOptions1000.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
+                    <option value="40">40 GB</option>
+                    <option value="80">80 GB</option>
+                    <option value="120">120 GB</option>
+                    <option value="200">200 GB</option>
                   </select>
                 </div>
-
-                {(selectedData1000 === '40' || selectedData1000 === '80') && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                    <div className="mb-3">
-                      <select
-                        value={additionalLineData1000}
-                        onChange={(e) => setAdditionalLineData1000(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm touch-manipulation"
-                      >
-                        <option value="40">40 GB - 5,90€/mes</option>
-                        <option value="80">80 GB - 7,90€/mes</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">
-                          {additionalLines1000} línea{additionalLines1000 !== 1 ? 's' : ''} adicional{additionalLines1000 !== 1 ? 'es' : ''}
-                        </span>
-                        {additionalLines1000 > 0 && (
-                          <span className="text-sm text-emerald-600 font-medium">
-                            +{(additionalLines1000 * getAdditionalLinePrice(additionalLineData1000)).toFixed(2)}€/mes
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines1000(Math.max(0, additionalLines1000 - 1));
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          disabled={additionalLines1000 === 0}
-                          className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center font-medium">{additionalLines1000}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAdditionalLines1000(additionalLines1000 + 1);
-                          }}
-                          onTouchStart={(e) => e.stopPropagation()}
-                          onTouchEnd={(e) => e.stopPropagation()}
-                          className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center font-bold touch-manipulation"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    {additionalLines1000 > 0 && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional incluye {additionalLineData1000} GB y llamadas ilimitadas por {getAdditionalLinePrice(additionalLineData1000).toFixed(2)}€/mes
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
-                      id: 'fibra-movil-1000',
-                      name: `Fibra 1 Gbps + Móvil ${selectedData1000}GB${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
-                      price: getPrice1000(),
-                      features: [
-                        '1 Gbps simétrica', 
-                        `${selectedData1000} GB móvil`, 
-                        'Llamadas ilimitadas', 
-                        'Router WiFi 6E Premium',
-                        ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} con ${additionalLineData1000} GB cada una`] : [])
-                      ]
-                    });
-                  }}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                  <select 
+                    value={fmAddLines1000}
+                    onChange={(e) => setFmAddLines1000(parseInt(e.target.value))}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="0">Sin líneas adicionales</option>
+                    <option value="1">1 línea adicional</option>
+                    <option value="2">2 líneas adicionales</option>
+                    <option value="3">3 líneas adicionales</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos por línea adicional:</label>
+                  <select 
+                    value={fmAddLineType1000}
+                    onChange={(e) => setFmAddLineType1000(e.target.value as '40' | '80')}
+                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    <option value="40">40 GB (+5,70€/línea)</option>
+                    <option value="80">80 GB (+7,90€/línea)</option>
+                  </select>
+                </div>
+                <button 
+                  onClick={() => handleContractPlan({
+                    id: `fibra-movil-1000-${fm1000Data}`,
+                    name: `Fibra 1 Gbps + Móvil ${fm1000Data === '40' ? '40GB' : fm1000Data === '80' ? '80GB' : fm1000Data === '120' ? '120 GB' : '200 GB'}${fmAddLines1000 > 0 ? ` + ${fmAddLines1000} línea${fmAddLines1000 > 1 ? 's' : ''} adicional${fmAddLines1000 > 1 ? 'es' : ''}` : ''}`,
+                    price: (fm1000Data === '40' ? 37.89 : fm1000Data === '80' ? 39.89 : fm1000Data === '120' ? 45.89 : 50.89) + fmAddLines1000 * (fmAddLineType1000 === '40' ? 5.70 : 7.90),
+                    features: [
+                      '1 Gbps simétrica',
+                      fm1000Data === '40' ? '40 GB móvil' : fm1000Data === '80' ? '80 GB móvil' : fm1000Data === '120' ? '120 GB móvil' : '200 GB móvil',
+                      'Llamadas ilimitadas',
+                      'Router WiFi 6 Pro incluido',
+                      ...(fmAddLines1000 > 0 ? [`${fmAddLines1000} línea${fmAddLines1000 > 1 ? 's' : ''} adicional${fmAddLines1000 > 1 ? 'es' : ''} ${fmAddLineType1000 === '40' ? '40 GB' : '80 GB'}`] : [])
+                    ]
+                  })}
                   className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Lo quiero
@@ -790,646 +460,443 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
           )}
 
           {activeTab === 'movil' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
-                onClick={() => onViewPlanDetail({
-                  id: `juntos-${selectedJuntosData}`,
-                  name: 'Juntos',
-                  price: getSelectedJuntosPrice(),
-                  features: [
-                    juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
-                    'Llamadas ilimitadas',
-                    'SMS ilimitados',
-                    '5G incluido',
-                    ...(additionalJuntosLines > 0 ? [`${additionalJuntosLines} línea${additionalJuntosLines > 1 ? 's' : ''} adicional${additionalJuntosLines > 1 ? 'es' : ''} con ${juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} cada una`] : [])
-                  ]
-                })}
-              >
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Smartphone className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Juntos</h3>
-                  <div className="text-3xl font-bold text-blue-600 mb-1">{getSelectedJuntosPrice()}€</div>
-                  <div className="text-gray-500 text-sm">/mes</div>
-                </div>
-                <ul className="space-y-3 mb-4">
-                  <li className="text-sm text-gray-600">Llamadas ilimitadas</li>
-                  <li className="text-sm text-gray-600">SMS ilimitados</li>
-                  <li className="text-sm text-gray-600">5G incluido</li>
-                </ul>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
-                  <select
-                    value={selectedJuntosData}
-                    onChange={(e) => setSelectedJuntosData(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
-                  >
-                    {juntosDataOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                
-                {/* Líneas adicionales */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalJuntosLines > 0) {
-                          setAdditionalJuntosLines(additionalJuntosLines - 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalJuntosLines}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalJuntosLines < 4) {
-                          setAdditionalJuntosLines(additionalJuntosLines + 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
-                    >
-                      +
-                    </button>
-                  </div>
-                  {additionalJuntosLines > 0 && (
-                    <div className="mt-2">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Datos por línea adicional:</label>
-                      <select
-                        value={additionalJuntosLineData}
-                        onChange={(e) => setAdditionalJuntosLineData(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
-                      >
-                        {juntosDataOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional incluye {juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} y llamadas ilimitadas por {getMobileAdditionalLinePrice(additionalJuntosLineData).toFixed(2)}€/mes
-                      </p>
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Plan Juntos */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300">
+                  <div className="text-center mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                      <Smartphone className="w-6 h-6 text-white" />
                     </div>
-                  )}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Juntos</h3>
+                  <div className="text-2xl font-bold text-blue-600 mb-1">{(selectedJuntosData === '40' ? 7.90 : selectedJuntosData === '60' ? 9.90 : selectedJuntosData === '100' ? 10.90 : 14.90).toFixed(2)}€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
+                  </div>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    {selectedJuntosData === '40' ? '40 GB de datos' : selectedJuntosData === '60' ? '60 GB de datos' : selectedJuntosData === '100' ? '100 GB de datos' : '200 GB de datos'}
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Llamadas ilimitadas
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      SMS ilimitados
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      5G incluido
+                    </li>
+                  </ul>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
+                    <select 
+                      value={selectedJuntosData}
+                      onChange={(e) => setSelectedJuntosData(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="40">40 GB</option>
+                      <option value="60">60 GB</option>
+                      <option value="100">100 GB</option>
+                      <option value="200">200 GB</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => handleContractPlan({
                       id: `juntos-${selectedJuntosData}`,
-                      name: 'Juntos',
-                      price: getSelectedJuntosPrice(),
+                      name: `Juntos ${selectedJuntosData === '40' ? '40 GB' : selectedJuntosData === '60' ? '60 GB' : selectedJuntosData === '100' ? '100 GB' : '200 GB'}`,
+                      price: selectedJuntosData === '40' ? 7.90 : selectedJuntosData === '60' ? 9.90 : selectedJuntosData === '100' ? 10.90 : 14.90,
                       features: [
-                        juntosDataOptions.find(opt => opt.value === selectedJuntosData)?.label || '40 GB',
+                        selectedJuntosData === '40' ? '40 GB' : selectedJuntosData === '60' ? '60 GB' : selectedJuntosData === '100' ? '100 GB' : '200 GB',
                         'Llamadas ilimitadas',
                         'SMS ilimitados',
-                        '5G incluido',
-                        ...(additionalJuntosLines > 0 ? [`${additionalJuntosLines} línea${additionalJuntosLines > 1 ? 's' : ''} adicional${additionalJuntosLines > 1 ? 'es' : ''} con ${juntosDataOptions.find(opt => opt.value === additionalJuntosLineData)?.label?.split(' - ')[0]} cada una`] : [])
+                        '5G incluido'
                       ]
-                    });
-                  }}
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  Lo quiero
-                </button>
-              </div>
-
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-600"
-                onClick={() => onViewPlanDetail({
-                  id: `compartidos-${selectedCompartidosData}`,
-                  name: 'Compartidos',
-                  price: getSelectedCompartidosPrice(),
-                  features: [
-                    compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.label || '50 GB',
-                    'Llamadas ilimitadas',
-                    'SMS ilimitados',
-                    '5G incluido',
-                    'Datos compartidos entre líneas',
-                    ...(additionalCompartidosLines > 0 ? [`${additionalCompartidosLines} línea${additionalCompartidosLines > 1 ? 's' : ''} adicional${additionalCompartidosLines > 1 ? 'es' : ''} con ${compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} cada una`] : [])
-                  ]
-                })}
-              >
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Smartphone className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Compartidos</h3>
-                  <div className="text-3xl font-bold text-emerald-600 mb-1">{getSelectedCompartidosPrice()}€</div>
-                  <div className="text-gray-500 text-sm">/mes</div>
-                </div>
-                <ul className="space-y-3 mb-4">
-                  <li className="text-sm text-gray-600">Llamadas ilimitadas</li>
-                  <li className="text-sm text-gray-600">SMS ilimitados</li>
-                  <li className="text-sm text-gray-600">5G incluido</li>
-                  <li className="text-sm text-gray-600">Datos compartidos entre líneas</li>
-                </ul>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Datos móviles:</label>
-                  <select
-                    value={selectedCompartidosData}
-                    onChange={(e) => setSelectedCompartidosData(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
+                    })}
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                   >
-                    {compartidosDataOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                    Lo quiero
+                  </button>
                 </div>
-                
-                {/* Líneas adicionales */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalCompartidosLines > 0) {
-                          setAdditionalCompartidosLines(additionalCompartidosLines - 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalCompartidosLines}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalCompartidosLines < 4) {
-                          setAdditionalCompartidosLines(additionalCompartidosLines + 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
-                    >
-                      +
-                    </button>
-                  </div>
-                  {additionalCompartidosLines > 0 && (
-                    <div className="mt-2">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Datos por línea adicional:</label>
-                      <select
-                        value={additionalCompartidosLineData}
-                        onChange={(e) => setAdditionalCompartidosLineData(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 touch-manipulation"
-                      >
-                        {compartidosDataOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional incluye {compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} compartidos y llamadas ilimitadas por {getMobileAdditionalLinePrice(additionalCompartidosLineData).toFixed(2)}€/mes
-                      </p>
+
+                {/* Plan Compartidos */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300">
+                  <div className="text-center mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                      <Smartphone className="w-6 h-6 text-white" />
                     </div>
-                  )}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Móvil Compartidos</h3>
+                  <div className="text-2xl font-bold text-purple-600 mb-1">{(selectedCompartidosData === '60' ? 20.90 : selectedCompartidosData === '80' ? 25.90 : selectedCompartidosData === '120' ? 21.90 : selectedCompartidosData === '160' ? 26.90 : selectedCompartidosData === '300' ? 36.90 : 35.90).toFixed(2)}€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
+                  </div>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      {selectedCompartidosData === '60' ? '60 GB compartidos' : selectedCompartidosData === '80' ? '80 GB compartidos' : selectedCompartidosData === '120' ? '120 GB compartidos' : selectedCompartidosData === '160' ? '160 GB compartidos' : selectedCompartidosData === '300' ? '300 GB compartidos' : '150 GB compartidos'}
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Hasta 4 líneas
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Llamadas ilimitadas
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      5G incluido
+                    </li>
+                  </ul>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Datos compartidos:</label>
+                    <select 
+                      value={selectedCompartidosData}
+                      onChange={(e) => setSelectedCompartidosData(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="60">60 GB compartidos</option>
+                      <option value="80">80 GB compartidos</option>
+                      <option value="120">120 GB compartidos</option>
+                      <option value="160">160 GB compartidos</option>
+                      <option value="300">300 GB compartidos</option>
+                      <option value="150">150 GB compartidos</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => handleContractPlan({
                       id: `compartidos-${selectedCompartidosData}`,
-                      name: 'Compartidos',
-                      price: getSelectedCompartidosPrice(),
+                      name: `Móvil Compartidos ${selectedCompartidosData === '60' ? '60 GB' : selectedCompartidosData === '80' ? '80 GB' : selectedCompartidosData === '120' ? '120 GB' : selectedCompartidosData === '160' ? '160 GB' : selectedCompartidosData === '300' ? '300 GB' : '150 GB'}`,
+                      price: selectedCompartidosData === '60' ? 20.90 : selectedCompartidosData === '80' ? 25.90 : selectedCompartidosData === '120' ? 21.90 : selectedCompartidosData === '160' ? 26.90 : selectedCompartidosData === '300' ? 36.90 : 35.90,
                       features: [
-                        compartidosDataOptions.find(opt => opt.value === selectedCompartidosData)?.label || '50 GB',
+                        selectedCompartidosData === '60' ? '60 GB compartidos' : selectedCompartidosData === '80' ? '80 GB compartidos' : selectedCompartidosData === '120' ? '120 GB compartidos' : selectedCompartidosData === '160' ? '160 GB compartidos' : selectedCompartidosData === '300' ? '300 GB compartidos' : '150 GB compartidos',
+                        'Hasta 4 líneas',
                         'Llamadas ilimitadas',
-                        'SMS ilimitados',
-                        '5G incluido',
-                        'Datos compartidos entre líneas',
-                        ...(additionalCompartidosLines > 0 ? [`${additionalCompartidosLines} línea${additionalCompartidosLines > 1 ? 's' : ''} adicional${additionalCompartidosLines > 1 ? 'es' : ''} con ${compartidosDataOptions.find(opt => opt.value === additionalCompartidosLineData)?.label?.split(' - ')[0]} cada una`] : [])
+                        '5G incluido'
                       ]
-                    });
-                  }}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  Lo quiero
-                </button>
-              </div>
-
-              <div 
-                className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-pink-500 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-pink-600"
-                onClick={() => onViewPlanDetail({
-                  id: `esim-${selectedEsimPlan}`,
-                  name: 'eSIM',
-                  price: getSelectedEsimPrice(),
-                  features: [
-                    esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
-                    ...(additionalEsimLines > 0 ? [`${additionalEsimLines} línea${additionalEsimLines > 1 ? 's' : ''} adicional${additionalEsimLines > 1 ? 'es' : ''} eSIM (${esimOptions.find(opt => opt.value === additionalEsimLineData)?.label})`] : []),
-                    'Activación instantánea',
-                    'Sin tarjeta física',
-                    '5G incluido',
-                    'Roaming UE incluido'
-                  ]
-                })}
-              >
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                  <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-1 rounded-full text-xs font-medium shadow-lg">
-                    eSIM Digital
-                  </span>
-                </div>
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Smartphone className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">eSIM</h3>
-                  <div className="text-3xl font-bold text-pink-600 mb-1">{getSelectedEsimPrice()}€</div>
-                  <div className="text-gray-500 text-sm">/mes</div>
-                </div>
-                <ul className="space-y-3 mb-4">
-                  <li className="text-sm text-gray-600">Activación instantánea</li>
-                  <li className="text-sm text-gray-600">Sin tarjeta física</li>
-                  <li className="text-sm text-gray-600">Red 5G incluida</li>
-                  <li className="text-sm text-gray-600">Compatible iPhone y Android</li>
-                </ul>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Selecciona tu plan eSIM:</label>
-                  <select
-                    value={selectedEsimPlan}
-                    onChange={(e) => setSelectedEsimPlan(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 touch-manipulation"
+                    })}
+                    className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                   >
-                    {esimOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label} - {option.price}€/mes
-                      </option>
-                    ))}
-                  </select>
+                    Lo quiero
+                  </button>
                 </div>
-                
-                {/* Líneas adicionales eSIM */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales eSIM:</label>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalEsimLines > 0) {
-                          setAdditionalEsimLines(additionalEsimLines - 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold transition-colors touch-manipulation"
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-medium text-gray-900 min-w-[2rem] text-center">{additionalEsimLines}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (additionalEsimLines < 4) {
-                          setAdditionalEsimLines(additionalEsimLines + 1);
-                        }
-                      }}
-                      onTouchStart={(e) => e.stopPropagation()}
-                      onTouchEnd={(e) => e.stopPropagation()}
-                      className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-full flex items-center justify-center text-white font-bold transition-colors touch-manipulation"
-                    >
-                      +
-                    </button>
+
+                {/* Plan eSIM */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-300">
+                <div className="text-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <Smartphone className="w-6 h-6 text-white" />
                   </div>
-                  {additionalEsimLines > 0 && (
-                    <div className="mt-2">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Plan para líneas adicionales:</label>
-                      <select
-                        value={additionalEsimLineData}
-                        onChange={(e) => setAdditionalEsimLineData(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-xs focus:ring-2 focus:ring-pink-500 focus:border-pink-500 touch-manipulation"
-                      >
-                        {esimOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label} - {option.price}€/mes
-                          </option>
-                        ))}
-                      </select>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cada línea adicional eSIM: {esimOptions.find(opt => opt.value === additionalEsimLineData)?.label} por {getEsimAdditionalLinePrice(additionalEsimLineData).toFixed(2)}€/mes (20% descuento)
-                      </p>
-                    </div>
-                  )}
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">eSIM</h3>
+                  <div className="text-2xl font-bold text-emerald-600 mb-1">{(selectedEsimPlan === '15' ? 7.95 : selectedEsimPlan === '40' ? 9.95 : selectedEsimPlan === '80' ? 11.75 : 15.75).toFixed(2)}€</div>
+                  <div className="text-gray-500 text-sm">/mes</div>
+                  <div className="mt-2 inline-block px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold border border-yellow-300">Alta eSIM: pago único 11,75€</div>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      {selectedEsimPlan === '15' ? 'Arista ilimitada 15 GB' : selectedEsimPlan === '40' ? 'Arista ilimitada 40 GB' : selectedEsimPlan === '80' ? 'Arista ilimitada 80 GB' : 'Arista ilimitada y datos ilimitados'}
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Ideal para viajeros
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Activación inmediata
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Sin tarjeta física
+                    </li>
+                  </ul>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Plan eSIM:</label>
+                    <select 
+                      value={selectedEsimPlan}
+                      onChange={(e) => setSelectedEsimPlan(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                      <option value="15">Arista ilimitada 15 GB</option>
+                      <option value="40">Arista ilimitada 40 GB</option>
+                      <option value="80">Arista ilimitada 80 GB</option>
+                      <option value="ilimitado">Arista ilimitada y datos ilimitados</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => handleContractPlan({
                       id: `esim-${selectedEsimPlan}`,
-                      name: 'eSIM',
-                      price: getSelectedEsimPrice(),
+                      name: selectedEsimPlan === '15' ? 'Arista ilimitada 15 GB' : selectedEsimPlan === '40' ? 'Arista ilimitada 40 GB' : selectedEsimPlan === '80' ? 'Arista ilimitada 80 GB' : 'Arista ilimitada y datos ilimitados',
+                      price: selectedEsimPlan === '15' ? 7.95 : selectedEsimPlan === '40' ? 9.95 : selectedEsimPlan === '80' ? 11.75 : 15.75,
                       features: [
-                        esimOptions.find(opt => opt.value === selectedEsimPlan)?.label || '20 GB',
-                        ...(additionalEsimLines > 0 ? [`${additionalEsimLines} línea${additionalEsimLines > 1 ? 's' : ''} adicional${additionalEsimLines > 1 ? 'es' : ''} eSIM (${esimOptions.find(opt => opt.value === additionalEsimLineData)?.label})`] : []),
-                        'Activación instantánea',
-                        'Sin tarjeta física',
-                        '5G incluido',
-                        'Roaming UE incluido'
+                        selectedEsimPlan === '15' ? '15 GB' : selectedEsimPlan === '40' ? '40 GB' : selectedEsimPlan === '80' ? '80 GB' : 'Datos ilimitados',
+                        'Llamadas ilimitadas',
+                        'Activación inmediata',
+                        'Sin tarjeta física'
                       ]
-                    });
-                  }}
-                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  Lo quiero
-                </button>
+                    })}
+                    className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Lo quiero
+                  </button>
+                </div>
               </div>
             </div>
           )}
 
           {activeTab === 'tv' && (
-            <div className="max-w-lg mx-auto">
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 border-2 border-gradient-to-r from-yellow-500 to-orange-500 shadow-xl relative cursor-pointer hover:shadow-2xl transition-all duration-300 overflow-hidden"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('data:image/svg+xml;base64,${btoa(`
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
-                      <defs>
-                        <linearGradient id="grass" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#2d5016;stop-opacity:1" />
-                          <stop offset="50%" style="stop-color:#4a7c59;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#2d5016;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="stands" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#1a365d;stop-opacity:1" />
-                          <stop offset="50%" style="stop-color:#2d3748;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#1a202c;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <!-- Stadium Bowl -->
-                      <ellipse cx="400" cy="500" rx="380" ry="80" fill="url(#stands)" opacity="0.3"/>
-                      <ellipse cx="400" cy="480" rx="350" ry="70" fill="url(#stands)" opacity="0.4"/>
-                      <ellipse cx="400" cy="460" rx="320" ry="60" fill="url(#stands)" opacity="0.5"/>
-                      <!-- Field -->
-                      <ellipse cx="400" cy="440" rx="280" ry="50" fill="url(#grass)" opacity="0.6"/>
-                      <!-- Field Lines -->
-                      <ellipse cx="400" cy="440" rx="280" ry="50" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
-                      <ellipse cx="400" cy="440" rx="140" ry="25" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
-                      <line x1="400" y1="415" x2="400" y2="465" stroke="white" stroke-width="1" opacity="0.3"/>
-                      <!-- Champions League Stars -->
-                      <g opacity="0.2">
-                        <polygon points="200,150 205,165 220,165 208,175 213,190 200,180 187,190 192,175 180,165 195,165" fill="#FFD700"/>
-                        <polygon points="400,120 405,135 420,135 408,145 413,160 400,150 387,160 392,145 380,135 395,135" fill="#FFD700"/>
-                        <polygon points="600,150 605,165 620,165 608,175 613,190 600,180 587,190 592,175 580,165 595,165" fill="#FFD700"/>
-                      </g>
-                      <!-- Floodlights -->
-                      <rect x="100" y="200" width="8" height="120" fill="#4a5568" opacity="0.4"/>
-                      <rect x="692" y="200" width="8" height="120" fill="#4a5568" opacity="0.4"/>
-                      <circle cx="104" cy="200" r="12" fill="#ffd700" opacity="0.3"/>
-                      <circle cx="696" cy="200" r="12" fill="#ffd700" opacity="0.3"/>
-                    </svg>
-                  `)}')`
-                }}
-                onClick={() => onViewPlanDetail({
-                  id: 'tv-deportivo',
-                  name: 'Paquete Deportivo Completo',
-                  price: 350,
-                  features: [
-                    'La Liga',
-                    'UEFA Champions League',
-                    'UEFA Europa League',
-                    'Premier League',
-                    'Fórmula 1',
-                    'Moto GP',
-                    'A1 Padel',
-                    'Más de 100 canales HD',
-                    'Contenido 4K disponible'
-                  ]
-                })}
-              >
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold flex items-center shadow-lg">
-                    <Star className="w-4 h-4 mr-2" />
-                    SOLO EMPRESAS
-                  </span>
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* TV Básico */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-orange-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Tv className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">TV Básico</h3>
+                    <div className="text-3xl font-bold text-orange-600 mb-1">15.90€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
+                  </div>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Más de 100 canales
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Canales HD incluidos
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Grabación en la nube
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Acceso multiplataforma
+                    </li>
+                  </ul>
+                  <button 
+                    onClick={() => handleContractPlan({
+                      id: 'tv-basico',
+                      name: 'TV Básico',
+                      price: 15.90,
+                      features: ['Más de 100 canales','Canales HD incluidos','Grabación en la nube','Acceso multiplataforma']
+                    })}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Lo quiero
+                  </button>
                 </div>
-                <div className="text-center mb-8">
-                  <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <Tv className="w-10 h-10 text-white" />
+
+                {/* TV Premium */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-red-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-red-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Tv className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">TV Premium</h3>
+                    <div className="text-3xl font-bold text-red-600 mb-1">25.90€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Paquete Deportivo Completo</h3>
-                  <p className="text-red-600 font-semibold mb-3">EXCLUSIVO PARA EMPRESAS</p>
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
-                    <div className="text-4xl font-black mb-1">350€</div>
-                    <div className="text-lg font-semibold">/mes</div>
-                  </div>
-                  <div className="mt-4 bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold inline-block">
-                    ⚽ Todo el Deporte
-                  </div>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Más de 200 canales
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Netflix incluido
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      HBO Max incluido
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Deportes premium
+                    </li>
+                  </ul>
+                  <button 
+                    onClick={() => handleContractPlan({
+                      id: 'tv-premium',
+                      name: 'TV Premium',
+                      price: 25.90,
+                      features: ['Más de 200 canales','Netflix incluido','HBO Max incluido','Deportes premium']
+                    })}
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Lo quiero
+                  </button>
                 </div>
-                <div className="space-y-3 mb-8">
-                  <div className="flex items-center justify-center text-gray-700">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="font-medium">La Liga + Champions League</span>
-                  </div>
-                  <div className="flex items-center justify-center text-gray-700">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="font-medium">Premier League + Europa League</span>
-                  </div>
-                  <div className="flex items-center justify-center text-gray-700">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="font-medium">Fórmula 1 + Moto GP</span>
-                  </div>
-                  <div className="flex items-center justify-center text-gray-700">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="font-medium">A1 Padel + 100+ canales HD</span>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
-                      id: 'tv-deportivo',
-                      name: 'Paquete Deportivo Completo',
-                      price: 350,
-                      features: [
-                        'La Liga',
-                        'UEFA Champions League',
-                        'UEFA Europa League',
-                        'Premier League',
-                        'Fórmula 1',
-                        'Moto GP',
-                        'A1 Padel',
-                        'Más de 100 canales HD',
-                        'Contenido 4K disponible',
-                        'Máxima flexibilidad'
-                      ]
-                    });
-                  }}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  Lo quiero
-                </button>
               </div>
             </div>
           )}
 
           {activeTab === 'fibra-movil-tv' && (
-            <div className="max-w-xl mx-auto">
-              <div 
-                className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-gradient-to-r from-purple-500 to-pink-500 shadow-lg relative cursor-pointer hover:shadow-2xl transition-all duration-300"
-                onClick={() => onViewPlanDetail({
-                  id: 'fibra-movil-tv-configurado',
-                  name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
-                  price: getTvPlanPrice(),
-                  features: getTvPlanFeatures()
-                })}
-              >
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-xs font-bold flex items-center shadow-lg">
-                    <Star className="w-3 h-3 mr-1" />
-                    OFERTA ESPECIAL
-                  </span>
-                </div>
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <div className="text-center pt-4 mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Fibra + Móvil + TV</h3>
-                  <div className="text-3xl font-bold text-purple-600 mb-2">{getTvPlanPrice().toFixed(2)}€</div>
-                  <div className="text-gray-500 text-sm">/mes</div>
-                  <p className="text-gray-600 text-sm mt-2">Pack completo todo incluido</p>
-                </div>
 
-                {/* Plan Selection */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Selecciona tu plan:</label>
-                  <select
-                    value={selectedTvPlan}
-                    onChange={(e) => setSelectedTvPlan(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white touch-manipulation"
-                  >
-                    {tvPlanOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label} - {option.price.toFixed(2)}€
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Additional Lines Selection */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
-                  <select
-                    value={selectedTvAdditionalLines}
-                    onChange={(e) => {
-                      setSelectedTvAdditionalLines(e.target.value);
-                      if (e.target.value === '0' || e.target.value.startsWith('family-')) {
-                        setTvAdditionalLinesCount(0);
-                      } else {
-                        setTvAdditionalLinesCount(1);
-                      }
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onTouchEnd={(e) => e.stopPropagation()}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white touch-manipulation"
-                  >
-                    {tvAdditionalLinesOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label} {option.price > 0 ? `- ${option.price.toFixed(2)}€` : ''}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Additional Lines Counter */}
-                {selectedTvAdditionalLines !== '0' && !selectedTvAdditionalLines.startsWith('family-') && (
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Cantidad de líneas adicionales:</label>
-                    <div className="flex items-center justify-center space-x-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTvAdditionalLinesCount(Math.max(0, tvAdditionalLinesCount - 1));
-                        }}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        disabled={tvAdditionalLinesCount === 0}
-                        className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-gray-600 font-bold touch-manipulation"
-                      >
-                        -
-                      </button>
-                      <span className="w-12 text-center font-medium text-lg">{tvAdditionalLinesCount}</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTvAdditionalLinesCount(tvAdditionalLinesCount + 1);
-                        }}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                        className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center font-bold touch-manipulation"
-                      >
-                        +
-                      </button>
+                {/* Fibra 600 Mbps + Móvil + TV */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Wifi className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 600 Mbps + Móvil + TV</h3>
+                    <div className="text-3xl font-bold text-purple-600 mb-1">{(59.90 + additionalLines600 * (selectedData600 === '35' ? 5.00 : 6.00)).toFixed(2)}€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
+                    <div className="mt-2">
+                      <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">Amazon Prime de regalo</span>
                     </div>
                   </div>
-                )}
-
-                {/* Features List */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Incluye:</h4>
-                  <ul className="space-y-2">
-                    {getTvPlanFeatures().map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      600 Mbps simétrica
+                    </li>
+                    
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      TV premium (200+ canales)
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Llamadas ilimitadas
+                    </li>
                   </ul>
+                  
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Datos por línea adicional:</label>
+                    <select 
+                      value={selectedData600}
+                      onChange={(e) => setSelectedData600(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="35">35 GB (+5€)</option>
+                      <option value="75">75 GB (+6€)</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                    <select 
+                      value={additionalLines600}
+                      onChange={(e) => setAdditionalLines600(parseInt(e.target.value))}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="0">Sin líneas adicionales</option>
+                      <option value="1">1 línea adicional</option>
+                      <option value="2">2 líneas adicionales</option>
+                      <option value="3">3 líneas adicionales</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      const basePrice = 59.90;
+                      const additionalPrice = additionalLines600 * (selectedData600 === '35' ? 5.00 : 6.00);
+                      const totalPrice = basePrice + additionalPrice;
+                      
+                      handleContractPlan({
+                        id: `fibra-movil-tv-600-${selectedData600}-${additionalLines600}`,
+                        name: `Fibra 600 Mbps + Móvil + TV${additionalLines600 > 0 ? ` + ${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''}` : ''}`,
+                        price: totalPrice,
+                        features: [
+                          '600 Mbps simétrica',
+                          'TV premium (200+ canales)',
+                          'Llamadas ilimitadas',
+                          'Router WiFi 6 Pro incluido',
+                          'Amazon Prime de regalo',
+                          ...(additionalLines600 > 0 ? [`${additionalLines600} línea${additionalLines600 > 1 ? 's' : ''} adicional${additionalLines600 > 1 ? 'es' : ''} ${selectedData600} GB`] : [])
+                        ]
+                      });
+                    }}
+                    className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Lo quiero
+                  </button>
                 </div>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onContractPlan({
-                      id: 'fibra-movil-tv-configurado',
-                      name: `Fibra + Móvil + TV - ${tvPlanOptions.find(p => p.value === selectedTvPlan)?.label}${selectedTvAdditionalLines !== '0' ? ` + ${tvAdditionalLinesOptions.find(l => l.value === selectedTvAdditionalLines)?.label}` : ''}`,
-                      price: getTvPlanPrice(),
-                      features: getTvPlanFeatures()
-                    });
-                  }}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg text-lg"
-                >
-                  Lo quiero
-                </button>
+                {/* Fibra 1 Gbps + Móvil + TV */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-emerald-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Wifi className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Fibra 1 Gbps + Móvil + TV</h3>
+                    <div className="text-3xl font-bold text-emerald-600 mb-1">{(62.00 + additionalLines1000 * (selectedData1000 === '35' ? 5.00 : 6.00)).toFixed(2)}€</div>
+                    <div className="text-gray-500 text-sm">/mes</div>
+                    <div className="mt-2"><span className="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-medium">Amazon Prime de regalo</span></div>
+                  </div>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      1 Gbps simétrica
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Datos móviles ilimitados</li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      TV premium (200+ canales)
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Llamadas ilimitadas
+                    </li>
+                    <li className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      Amazon Prime de regalo
+                    </li>
+                  </ul>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Líneas adicionales:</label>
+                    <select 
+                      value={additionalLines1000}
+                      onChange={(e) => setAdditionalLines1000(parseInt(e.target.value))}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                      <option value="0">Sin líneas adicionales</option>
+                      <option value="1">1 línea adicional</option>
+                      <option value="2">2 líneas adicionales</option>
+                      <option value="3">3 líneas adicionales</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Datos por línea adicional:</label>
+                    <select 
+                      value={selectedData1000}
+                      onChange={(e) => setSelectedData1000(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white text-gray-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    >
+                      <option value="35">35 GB (+5€)</option>
+                      <option value="75">75 GB (+6€)</option>
+                    </select>
+                  </div>
+                  
+                  <button 
+                    onClick={() => {
+                      const basePrice = 62.00;
+                      const additionalPrice = additionalLines1000 * (selectedData1000 === '35' ? 5.00 : 6.00);
+                      const totalPrice = basePrice + additionalPrice;
+                      handleContractPlan({
+                        id: `fibra-movil-tv-1000-ilimitado-${selectedData1000}-${additionalLines1000}`,
+                        name: `Fibra 1 Gbps + Móvil + TV + Amazon Prime${additionalLines1000 > 0 ? ` + ${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''}` : ''}`,
+                        price: totalPrice,
+                        features: [
+                          '1 Gbps simétrica',
+                          'Datos móviles ilimitados',
+                          'TV premium (200+ canales)',
+                          'Llamadas ilimitadas',
+                          'Router WiFi 6 Pro incluido',
+                          'Amazon Prime de regalo',
+                          ...(additionalLines1000 > 0 ? [`${additionalLines1000} línea${additionalLines1000 > 1 ? 's' : ''} adicional${additionalLines1000 > 1 ? 'es' : ''} ${selectedData1000} GB`] : [])
+                        ]
+                      });
+                    }}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
+                    Lo quiero
+                  </button>
+                </div>
               </div>
             </div>
           )}

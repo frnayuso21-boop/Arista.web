@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import EmpresasPage from './components/EmpresasPage';
 import SecurityPage from './components/SecurityPage';
-import EnergyPage from './components/EnergyPage';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import CookiePolicy from './components/CookiePolicy';
 import CoverageModal from './components/CoverageModal';
@@ -24,6 +23,7 @@ import AlarmasPremiumPage from './pages/AlarmasPremiumPage';
 import EnergiaPage from './pages/EnergiaPage';
 import EmpresasServiciosPage from './pages/EmpresasServiciosPage';
 import FAQPage from './pages/FAQPage';
+import ComparadorFacturasPage from './pages/ComparadorFacturasPage';
 
 interface Plan {
   id: string;
@@ -127,6 +127,9 @@ function App() {
           
           {/* Ruta de FAQ */}
           <Route path="/preguntas-frecuentes" element={<FAQPage />} />
+
+          {/* Comparador de facturas */}
+          <Route path="/comparador-facturas" element={<ComparadorFacturasPage />} />
         </Routes>
         
         {showCoverageModal && (
