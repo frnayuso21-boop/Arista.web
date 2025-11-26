@@ -200,7 +200,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <img 
-                src={`${import.meta.env.BASE_URL}Arista - Logotipo Final Positivo.png`} 
+                src={`${import.meta.env.BASE_URL}arista-empresas-logo.png`} 
                 alt="Arista Empresas" 
                 className="h-20"
               />
@@ -534,7 +534,7 @@ const EmpresasPage: React.FC<EmpresasPageProps> = ({ onContractPlan }) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <img 
-                src={`${import.meta.env.BASE_URL}Arista - Logotipo Final Positivo.png`} 
+                src={`${import.meta.env.BASE_URL}arista-empresas-logo.png`} 
                 alt="Arista" 
                 className="h-16 mb-4"
               />
