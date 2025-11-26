@@ -24,7 +24,10 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
-      - run: npm run build
+      - name: Build site
+        run: npm run build
+        env:
+          VITE_BASE: '/Arista.web/'
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
