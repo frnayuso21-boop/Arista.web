@@ -13,7 +13,7 @@ const AristaLogo: React.FC<AristaLogoProps> = ({
 }) => {
   return (
     <img
-      src="/Arista - Logotipo Final WEB PNG.png"
+      src={`${import.meta.env.BASE_URL}Arista - Logotipo Final WEB PNG.png`}
       alt="Arista Logo"
       width={width}
       height={height}
