@@ -49,7 +49,7 @@ const Hero: React.FC = () => {
                 onClick={() => setShowContactForm(true)}
                 className="text-white border border-white/30 px-6 py-2 rounded-lg font-medium text-base hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm"
               >
-                ¡Pide tu presupuesto sin compromiso!
+                ¡Hasta 5 meses al 50% de descuento!
               </button>
             </div>
 
