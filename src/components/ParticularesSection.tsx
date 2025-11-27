@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Wifi, Smartphone, Tv, CheckCircle } from 'lucide-react';
+import OfferPromoForm from './OfferPromoForm';
 
 interface Plan {
   id: string;
@@ -16,6 +17,25 @@ interface ParticularesProps {
 
 const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onShowConfigurator, onViewPlanDetail }) => {
   const [activeTab, setActiveTab] = useState<string>('fibra');
+  const [showOfferForm, setShowOfferForm] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
+  const fibraRef = useRef<HTMLDivElement | null>(null);
+  const [badgeLeft, setBadgeLeft] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const updateBadgePos = () => {
+      if (wrapperRef.current && fibraRef.current) {
+        const wrapRect = wrapperRef.current.getBoundingClientRect();
+        const fibraRect = fibraRef.current.getBoundingClientRect();
+        const left = (fibraRect.left - wrapRect.left) + fibraRect.width / 2;
+        setBadgeLeft(left);
+      }
+    };
+    updateBadgePos();
+    window.addEventListener('resize', updateBadgePos);
+    return () => window.removeEventListener('resize', updateBadgePos);
+  }, [activeTab]);
   
   // Estados para los selectores de móvil
   const [selectedJuntosData, setSelectedJuntosData] = useState('40');
@@ -49,6 +69,7 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
   };
 
   const tabs = [
+    { id: 'oferta', name: 'Oferta', mobileLabel: 'Oferta', icon: Tv },
     { id: 'fibra', name: 'Fibra', mobileLabel: 'Fibra', icon: Wifi },
     { id: 'fibra-movil', name: 'Fibra + Móvil', mobileLabel: 'Fibra+Móvil', icon: Wifi },
     { id: 'movil', name: 'Móvil', mobileLabel: 'Móvil', icon: Smartphone },
@@ -76,23 +97,34 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
           </h2>
         </div>
 
-        <div className="flex justify-center mb-8">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1 border border-white/20 w-full max-w-3xl overflow-x-auto">
+        <div ref={wrapperRef} className="flex justify-center mb-8 relative">
+          <span
+            className="absolute -top-10 md:-top-11 z-50 pointer-events-none flex flex-col items-center transform -translate-x-1/2"
+            style={{ left: (badgeLeft !== null ? `${badgeLeft - 76}px` : '50%') }}
+          >
+            <span className="bg-amber-400 text-gray-900 text-[11px] md:text-xs px-3 py-[3px] rounded-full font-medium shadow-sm">Best Seller</span>
+            <svg viewBox="0 0 24 24" className="w-3 h-3 text-amber-400" aria-hidden="true">
+              <path fill="currentColor" d="M12 16l-6-6h12z" />
+            </svg>
+          </span>
+          <div ref={barRef} className="bg-white/10 backdrop-blur-sm rounded-lg p-1 border border-white/20 w-full max-w-3xl relative overflow-visible md:overflow-x-auto z-10">
             <div className="flex space-x-1 min-w-max md:min-w-0 justify-center">
               {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
-                    activeTab === tab.id
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{tab.name}</span>
-                  <span className="sm:hidden">{tab.mobileLabel}</span>
-                </button>
+                <div key={tab.id} className="relative" ref={tab.id === 'fibra' ? fibraRef : undefined}>
+                  <button
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`relative px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
+                      activeTab === tab.id
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <tab.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{tab.name}</span>
+                    <span className="sm:hidden">{tab.mobileLabel}</span>
+                    {tab.id === 'oferta' && null}
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -101,6 +133,21 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
 
 
         <div className="max-w-6xl mx-auto">
+          {activeTab === 'oferta' && (
+            <div className="grid grid-cols-1 gap-6">
+              <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 shadow-lg text-center">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-gray-900 text-xs px-3 py-1 rounded-full font-medium shadow-sm">Best Seller</span>
+                <div className="text-3xl font-bold text-white mb-2">¡Hasta 5 meses al 50% de descuento!</div>
+                <div className="text-white/90 mb-6">Promoción especial disponible para nuevas altas</div>
+                <button 
+                  onClick={() => setShowOfferForm(true)}
+                  className="mx-auto w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Aprovechar ahora
+                </button>
+              </div>
+            </div>
+          )}
           {activeTab === 'fibra' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300" data-plan-id="fibra600-40gb-m">
@@ -901,6 +948,8 @@ const ParticularesSection: React.FC<ParticularesProps> = ({ onContractPlan, onSh
             </div>
           )}
         </div>
+
+        <OfferPromoForm isOpen={showOfferForm} onClose={() => setShowOfferForm(false)} />
 
         <div className="text-center mt-12">
           <button

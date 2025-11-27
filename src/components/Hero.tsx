@@ -47,7 +47,7 @@ const Hero: React.FC = () => {
             <div className="mb-12 md:mb-16">
               <button
                 onClick={() => setShowContactForm(true)}
-                className="text-white border border-white/30 px-6 py-2 rounded-lg font-medium text-base hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold text-base hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 ¡Hasta 5 meses al 50% de descuento!
               </button>
